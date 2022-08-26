@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tahun" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e90f2982-c637-4e92-bfc8-c855940e8fc4">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KPI_LOCAL"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="KPI" uuid="0e3c64ff-cdf7-4864-a0d8-18bb2acb01b2">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KPI_LOCAL"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT kode,tahun from tmtahun group by kode]]>
+		</queryString>
+		<field name="kode" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="kode"/>
+			<property name="com.jaspersoft.studio.field.label" value="kode"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="tmtahun"/>
+		</field>
+		<field name="tahun" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="tahun"/>
+			<property name="com.jaspersoft.studio.field.label" value="tahun"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="tmtahun"/>
+		</field>
+		<group name="kode">
+			<groupExpression><![CDATA[$F{kode}]]></groupExpression>
+		</group>
+	</subDataset>
+	<queryString language="SQL">
+		<![CDATA[SELECT tahun,kode from tmtahun group by kode]]>
+	</queryString>
+	<field name="tahun" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tahun"/>
+		<property name="com.jaspersoft.studio.field.label" value="tahun"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="tmtahun"/>
+	</field>
+	<field name="kode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="kode"/>
+		<property name="com.jaspersoft.studio.field.label" value="kode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="tmtahun"/>
+	</field>
+	<group name="tahun">
+		<groupExpression><![CDATA[$F{tahun}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="310" height="30" uuid="38848960-7e7a-4a5a-b121-469f92212eb6">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAPORAN REALISASI PENDAPATAN]]></text>
+			</staticText>
+			<image>
+				<reportElement x="390" y="3" width="155" height="60" uuid="ec255d85-a4cc-41f5-91f3-c772f5c532d7"/>
+				<imageExpression><![CDATA["C:/wamp64/www/pi_kpi/public/assets/img/logo.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="-20" y="70" width="595" height="1" uuid="a4ea3471-07c8-4ee6-9e0d-9c582474d218">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="-20" y="70" width="595" height="1" uuid="1a14a3f7-98e7-4aae-a820-f935a7d8ee0c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="1" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="244" splitType="Stretch">
+			<componentElement>
+				<reportElement x="180" y="10" width="200" height="40" uuid="ea713978-4dfc-48c0-9ae9-9cbcb9f352a8">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="KPI" uuid="c90b5a77-6028-46bd-a82d-3ecc6ffa1f5f">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="100" uuid="15feb771-3ed2-4538-82da-f85f7ba636eb">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="ae59962a-baf0-49eb-97cd-38fb26286878"/>
+								<text><![CDATA[kode]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="14f083e3-e085-4f21-8208-f59924cd80cf"/>
+								<textFieldExpression><![CDATA[$F{kode}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="af6b86fe-83c4-4e52-b8c2-9ef88070b2f4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="7295e4f8-aa6a-4d41-a0ea-ae0772182dbb"/>
+								<text><![CDATA[tahun]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="1afb420c-d39e-4af3-a28d-9a3e44f97fa4"/>
+								<textFieldExpression><![CDATA[$F{tahun}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

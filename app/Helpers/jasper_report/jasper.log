@@ -1,0 +1,41 @@
+yyssJasper Report Bootstrap...
+Rx Connection: www.sublimetext.com
+Ready...
+Rx Cmd: REPGEN;db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=;D:/xampp64/www/retribusi;resources/views/jasper/report3.jrxml;PDF-STREAM;TAHUN=1&UNIQID=5f6af56b37938&
+Client Handler ID#1 REPGEN Params: [db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=] - [D:/xampp64/www/retribusi] - [resources/views/jasper/report3.jrxml] - [PDF-STREAM] - [TAHUN=1&UNIQID=5f6af56b37938&] - [2]
+Generating Report!!!
+Client Handler ID#1 REPGEN Result: <FAIL>
+Rx Cmd: null
+Client Handler ID#1 exiting.
+Rx Connection: www.sublimetext.com
+Ready...
+Rx Cmd: REPGEN;db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=;D:/xampp64/www/retribusi;resources/views/jasper/report3.jrxml;PDF-STREAM;TAHUN=1&UNIQID=5f6af6b16d7ac&
+Client Handler ID#2 REPGEN Params: [db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=] - [D:/xampp64/www/retribusi] - [resources/views/jasper/report3.jrxml] - [PDF-STREAM] - [TAHUN=1&UNIQID=5f6af6b16d7ac&] - [2]
+Generating Report!!!
+Client Handler ID#2 REPGEN Result: <FAIL>
+Rx Cmd: null
+Client Handler ID#2 exiting.
+Rx Connection: www.sublimetext.com
+Ready...
+Rx Cmd: REPGEN;db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=;D:/xampp64/www/retribusi;resources/views/jasper/report3.jrxml;PDF-STREAM;TAHUN=1&UNIQID=5f6af6e6c473b&
+Client Handler ID#3 REPGEN Params: [db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=] - [D:/xampp64/www/retribusi] - [resources/views/jasper/report3.jrxml] - [PDF-STREAM] - [TAHUN=1&UNIQID=5f6af6e6c473b&] - [2]
+Generating Report!!!
+Client Handler ID#3 REPGEN Result: <FAIL>
+Rx Cmd: null
+Client Handler ID#3 exiting.
+Rx Connection: www.sublimetext.com
+Ready...
+Rx Cmd: REPGEN;db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=;D:/xampp64/www/retribusi;resources/views/jasper/report3.jrxml;PDF-STREAM;TAHUN=1&UNIQID=5f6af77033fd4&
+Client Handler ID#4 REPGEN Params: [db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=] - [D:/xampp64/www/retribusi] - [resources/views/jasper/report3.jrxml] - [PDF-STREAM] - [TAHUN=1&UNIQID=5f6af77033fd4&] - [2]
+Generating Report!!!
+Client Handler ID#4 REPGEN Result: <FAIL>
+Rx Cmd: null
+Client Handler ID#4 exiting.
+Rx Connection: www.sublimetext.com
+Ready...
+Rx Cmd: REPGEN;db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=;D:/xampp64/www/retribusi;resources/views/jasper/report3.jrxml;PDF-STREAM;1&UNIQID=5f6af8023d60f
+Client Handler ID#5 REPGEN Params: [db.driver=com..jdbc.Driver&db.connect=jdbc:mysql://:/&db.user=&db.password=] - [D:/xampp64/www/retribusi] - [resources/views/jasper/report3.jrxml] - [PDF-STREAM] - [1&UNIQID=5f6af8023d60f] - [2]
+Generating Report!!!
+Client Handler ID#5 REPGEN Result: <FAIL>
+Rx Cmd: null
+Client Handler ID#5 exiting.

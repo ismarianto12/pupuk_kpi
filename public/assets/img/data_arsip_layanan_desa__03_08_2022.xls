@@ -1,0 +1,126 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+		<title>Data Arsip Layanan Desa </title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link href="https://demosid.opendesa.id/assets/css/report.css" rel="stylesheet">
+	</head>
+	<body>
+		<div id="container">
+			<div id="body">
+				<!-- Isi Cetak/Unduh Data Disni -->
+				
+<table>
+	<tbody>
+		<tr>
+			<td>
+								<h1 class="judul">
+					PEMERINTAH KABUPATEN LOMBOK BART  <BR>KECAMATAN BATULAY4R  <BR>DESA SENGGIG1 				</h1>
+			</td>
+		</tr>
+		<tr>
+			<td><hr class="garis"></td>
+		</tr>
+		<tr>
+			<td class="text-center">
+				<h4><u> DATA ARSIP LAYANAN SURAT DESA </u></h4>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+				<table class="border thick">
+					<thead>
+						<tr class="border thick">
+							<th>No</th>
+							<th>No Kode Surat</th>
+							<th>No Urut Surat</th>
+							<th>Jenis Surat</th>
+							<th>Nama Penduduk</th>
+							<th>Keterangan</th>
+							<th>Ditandatangani Oleh</th>
+							<th>Tanggal</th>
+							<th>User</th>
+						</tr>
+					</thead>
+					<tbody>
+													<tr>
+								<td>1</td>
+								<td class="textx">S-02</td>
+								<td class="textx">1</td>
+								<td class="textx">Keterangan Penduduk</td>
+								<td>
+																			AHMAD ALLIF RIZKI																			</td>
+									<td>lala</td>
+									<td>Mustahiq S.Adm</td>
+									<td nowrap>03 Agustus 2022</td>
+									<td>Chandra Sumantri</td>
+								</tr>
+														<tr>
+								<td>2</td>
+								<td class="textx">S-07</td>
+								<td class="textx">1</td>
+								<td class="textx">Pengantar Surat Keterangan Catatan Kepolisian</td>
+								<td>
+																			ELOK KHALISA SABRINA																			</td>
+									<td>PERSYARATAN MELAMAR PEKERJAAN</td>
+									<td>Mustahiq S.Adm</td>
+									<td nowrap>03 Agustus 2022</td>
+									<td>Chandra Sumantri</td>
+								</tr>
+														<tr>
+								<td>3</td>
+								<td class="textx">S-04</td>
+								<td class="textx">02</td>
+								<td class="textx">Keterangan Pindah Penduduk</td>
+								<td>
+																			APTA MADA RIZKY ALAMSYAH																			</td>
+									<td>Mohon dibantu untuk proses orang ini</td>
+									<td>Syafruddin </td>
+									<td nowrap>02 Agustus 2022</td>
+									<td>Chandra Sumantri</td>
+								</tr>
+														<tr>
+								<td>4</td>
+								<td class="textx">S-02</td>
+								<td class="textx">1</td>
+								<td class="textx">Keterangan Penduduk</td>
+								<td>
+																			AHLUL																			</td>
+									<td>lol</td>
+									<td>Muhammad Ilham </td>
+									<td nowrap>30 Maret 2019</td>
+									<td>Chandra Sumantri</td>
+								</tr>
+													</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</table>
+			</div>
+			<br />
+			<table width="100%">
+				<tr>
+					<td colspan="2" width=10%>&nbsp;</td>
+											<td colspan="2" width=20%>
+							Mengetahui
+							<br>Kaur Pemerintahan  Senggig1 							<br><br><br><br>
+							<br><u>( Syafruddin  )</u>
+							<br>NIPD/NIP : -						</td>
+										<td colspan="3" width=40%>&nbsp;</td>
+					<td width=20% nowrap>
+						Desa Senggig1 , 03 Agustus 2022						<br>Sekretaris Desa Senggig1 						<br><br><br><br>
+						<br><u>( Mustahiq S.Adm )</u>
+						<br>NIPD/NIP : 197905062010011007					</td>
+					<td width=10%>&nbsp;</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

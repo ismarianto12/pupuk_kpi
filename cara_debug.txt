@@ -1,0 +1,5 @@
+masuk ke jalankan perintah
+
+C:\wamp64\www\pi_kpi\vendor\geekcom\phpjasper-laravel\bin\jasperstarter\bin>jasperstarter process "C:\wamp64\www\pi_kpi/routes/hello_world.jrxml" -o "adsad.pdf" -f pdf
+
+C:\wamp64\www\pi_kpi\vendor\geekcom\phpjasper-laravel\bin\jasperstarter\bin>
