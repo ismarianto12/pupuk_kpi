@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Properti_app;
 use App\Models\tmkamus_kpi;
 use App\Models\tmprospektif;
+use App\Models\tmprospektif_sub;
 use App\Models\tmtable_assigment;
 use App\Models\tmtahun;
 use App\Models\tmunit;
-use DataTables;
 use Illuminate\Http\Request;
 
 class Assignmentcontroller extends Controller
@@ -31,12 +30,11 @@ class Assignmentcontroller extends Controller
 
     public function index()
     {
-        $unit = tmunit::get();
-        $tahun = tmtahun::get();
 
         return view($this->view . 'index', [
-            'unit' => $unit,
-            'tahun' => $tahun,
+            'unit' => tmunit::get(),
+            'tahun' => tmtahun::get(),
+
         ]);
     }
 
@@ -45,7 +43,7 @@ class Assignmentcontroller extends Controller
         if ($this->request->ajax()) {
             $id = $this->request->id;
             $sql = tmkamus_kpi::select(
-                
+
                 'tmkamus_kpi.id as idnya',
                 'tmkamus_kpi.nama_kpi',
                 'tmkamus_kpi.definisi',
@@ -93,6 +91,121 @@ class Assignmentcontroller extends Controller
             }
         }
     }
+
+    public function api()
+    {
+        $prospektif = tmprospektif::get();
+        $idx = 0;
+        foreach ($prospektif as $prospektiff) {
+            $dataset[$idx]['id'] = $prospektiff->id;
+            $dataset[$idx]['status'] = 'prospektiff';
+
+            $dataset[$idx]['parent'] = true;
+            $dataset[$idx]['nama_kpi'] = '<b>' . $prospektiff->nama_prospektif . '</b>';
+            $dataset[$idx]['nama_satuan'] = '';
+            $dataset[$idx]['target'] = '';
+            $dataset[$idx]['nama_polaritas'] = '';
+            $dataset[$idx]['sub'] = '';
+            $dataset[$idx]['kpi'] = '';
+            $dataset[$idx]['total'] = '';
+            $dataset[$idx]['action'] = '<a href="" class="btn btn-sm btn-clean btn-icon"
+            title="Assignemn data as unit kerja" id="create"
+            data-id="' . $prospektiff->id . '"
+            data-status="prospektiff"><i class="fa fa-plus"></i></a>';
+
+            $fkamus = tmtable_assigment::join('tmkamus_kpi', 'tmkamus_kpi.id', '=', 'tmtable_assigment.tmkamus_kpi_id')
+                ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id')
+                ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id')
+                ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id')
+                ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id')
+                ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id')->where('tmtable_assigment.tmprospektif_id', $prospektiff->id)->get();
+            $idx++;
+
+            $a = 1;
+            foreach ($fkamus as $klamuss) {
+                $dataset[$idx]['id'] = $klamuss->id;
+                $dataset[$idx]['status'] = '';
+
+                $dataset[$idx]['parent'] = false;
+                $dataset[$idx]['nama_kpi'] = '&nbsp;&nbsp;' . $klamuss->nama_kpi;
+                $dataset[$idx]['nama_satuan'] = $klamuss->nama_satuan;
+                $dataset[$idx]['target'] = $klamuss->target;
+                $dataset[$idx]['nama_polaritas'] = $klamuss->nama_polaritas;
+                $dataset[$idx]['sub'] = $klamuss->sub;
+                $dataset[$idx]['kpi'] = $klamuss->kpi;
+                $dataset[$idx]['total'] = $klamuss->total;
+                $dataset[$idx]['action'] = ' <a href="" class="btn btn-sm btn-clean btn-icon"
+                title="Assignemn data as unit kerja" id="create" data-status="prospektiff"
+                data-id="' . $klamuss->id . '"><i class="fa fa-edit"></i></a>
+            <a href="" class="btn btn-sm btn-clean btn-icon" id="delete"
+                title="Detail data" data-id="' . $klamuss->id . '"><i
+                    class="fa fa-trash"></i></a>';
+
+                $idx++;
+                $a++;
+            }
+            // end get prospektif
+            $c = 1;
+            $tmprospektif_sub = tmprospektif_sub::where('tmprospektif_id', $prospektiff->id)->get();
+            foreach ($tmprospektif_sub as $tmprospektif_subs) {
+                $dataset[$idx]['id'] = $tmprospektif_subs->id;
+                $dataset[$idx]['status'] = 'subprospektiff';
+                $dataset[$idx]['parent'] = true;
+                $dataset[$idx]['nama_kpi'] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>' . $tmprospektif_subs->nama_prospektif_sub . '</b>';
+                $dataset[$idx]['nama_satuan'] = '';
+                $dataset[$idx]['target'] = '';
+                $dataset[$idx]['nama_polaritas'] = '';
+                $dataset[$idx]['sub'] = '';
+                $dataset[$idx]['kpi'] = '';
+                $dataset[$idx]['total'] = '';
+                $dataset[$idx]['action'] = '<a href="" class="btn btn-sm btn-clean btn-icon"
+                title="Assignemn data as unit kerja" id="create"
+                data-id="' . $tmprospektif_subs->id . '"
+                data-status="subprospektiff"><i class="fa fa-plus"></i></a>';
+
+                $c++;
+                $idx++;
+
+                $kamus = tmtable_assigment::join('tmkamus_kpi', 'tmkamus_kpi.id', '=', 'tmtable_assigment.tmkamus_kpi_id')
+                    ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id')
+                    ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id')
+                    ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id')
+                    ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id')
+                    ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id')
+                    ->where('tmtable_assigment.tmprospektif_sub_id', $tmprospektif_subs->id)->get();
+                $d = 1;
+                foreach ($kamus as $kamuss) {
+                    $dataset[$idx]['id'] = $kamuss->id;
+                    $dataset[$idx]['status'] = '';
+                    $dataset[$idx]['parent'] = false;
+                    $dataset[$idx]['nama_kpi'] = '&nbsp;&nbsp;' . $kamuss->nama_kpi;
+                    $dataset[$idx]['nama_satuan'] = $kamuss->nama_satuan;
+                    $dataset[$idx]['target'] = $kamuss->target;
+                    $dataset[$idx]['nama_polaritas'] = $kamuss->nama_polaritas;
+                    $dataset[$idx]['sub'] = $kamuss->sub;
+                    $dataset[$idx]['kpi'] = $kamuss->kpi;
+                    $dataset[$idx]['total'] = $kamuss->total;
+                    $dataset[$idx]['action'] = ' <a href="" class="btn btn-sm btn-clean btn-icon"
+                    title="Assignemn data as unit kerja" id="create"
+                    data-id="' . $kamuss->id . '" data-status="subprospektiff"><i class="fa fa-edit"></i></a>
+                <a href="" class="btn btn-sm btn-clean btn-icon" id="delete"
+                    title="Detail data" data-id="' . $kamuss->id . '" data-status="subprospektiff"><i
+                        class="fa fa-trash"></i></a>';
+
+                    $idx++;
+                    $d = 1;
+
+                }
+
+                $idx++;
+            }
+
+            $idx++;
+        }
+        $result = array_merge($dataset);
+        return response()->json(['data' => $result]);
+    }
+
     public function save_assingment()
     {
         if ($this->request->ajax()) {
@@ -116,130 +229,33 @@ class Assignmentcontroller extends Controller
         }
     }
 
-    /**
-     *
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function api()
-    {
-        $data = tmprospektif::select(
-
-            'tmkamus_kpi.id as idnya',
-            'tmkamus_kpi.nama_kpi',
-            'tmkamus_kpi.definisi',
-            'tmkamus_kpi.tujuan',
-            'tmkamus_kpi.tmsatuan_id',
-            'tmkamus_kpi.formula_penilaian',
-            'tmkamus_kpi.target',
-            'tmkamus_kpi.tmfrekuensi_id',
-            'tmkamus_kpi.tmpolaritas_id',
-            'tmkamus_kpi.unit_pemilik_kpi',
-            'tmkamus_kpi.unit_pengelola_kpi',
-            'tmkamus_kpi.sumber_data',
-            'tmkamus_kpi.jenis_pengukuran',
-
-            'tmfrekuensi.nama_frekuensi',
-
-            'tmkamus_kpi_sub.nama_kpi_sub',
-            'tmkamus_kpi_sub.definisi',
-            'tmkamus_kpi_sub.tujuan',
-            'tmkamus_kpi_sub.tmsatuan_id',
-            'tmkamus_kpi_sub.formula_penilaian',
-            'tmkamus_kpi_sub.target as target_sub',
-            'tmkamus_kpi_sub.tmfrekuensi_id',
-            'tmkamus_kpi_sub.tmpolaritas_id',
-            'tmkamus_kpi_sub.unit_pemilik_kpi',
-            'tmkamus_kpi_sub.unit_pengelola_kpi',
-            'tmkamus_kpi_sub.sumber_data',
-
-            'tmfrekuensi.kode',
-            'tmpolaritas.kode',
-            'tmpolaritas.nama_polaritas',
-            'tmsatuan.kode',
-            'tmsatuan.nama_satuan',
-            'tmtahun.tahun',
-            'tmkamus_kpi.created_at',
-            'tmkamus_kpi.updated_at',
-            'tmunit.nama as nama_unit',
-            'tmtable_assigment.id as tmtable_assigment_id',
-            'tmtable_assigment.id',
-
-            'tmprospektif.nama_prospektif',
-            'tmprospektif.id as parent_id_pr',
-            'tmprospektif.kode',
-
-            'tmprospektif_sub.tmprospektif_id',
-            'tmprospektif_sub.nama_prospektif_sub'
-          )
-
-            ->join('tmprospektif_sub', 'tmprospektif.id', '=', 'tmprospektif_sub.tmprospektif_id', 'LEFT')
-
-            ->join('tmkamus_kpi', 'tmkamus_kpi.tmprospektif_id', '=', 'tmprospektif.id', 'LEFT')
-            ->join('tmkamus_kpi_sub', 'tmkamus_kpi_sub.tmprospektif_sub_id', '=', 'tmprospektif_sub.id', 'LEFT')
-            ->Leftjoin('tmsatuan', function ($join) {
-                $join->on('tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id')->on('tmkamus_kpi_sub.tmsatuan_id', '=', 'tmsatuan.id');
-
-            })
-            ->Leftjoin('tmfrekuensi', function ($join) {
-                $join->on('tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id')->on('tmkamus_kpi_sub.tmfrekuensi_id', '=', 'tmfrekuensi.id');
-
-            })
-            ->Leftjoin('tmpolaritas', function ($join) {
-                $join->on('tmkamus_kpi.tmpolaritas_id', '=', 'tmpolaritas.id')->on('tmkamus_kpi_sub.tmpolaritas_id', '=', 'tmpolaritas.id');
-            })
-            ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
-            ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id', 'left')
-            ->join('tmtable_assigment', 'tmkamus_kpi.id', '=', 'tmtable_assigment.tmkamus_kpi_id', 'left outer')
-            ->where('tmprospektif.parent_id', 0);
-
-        if ($this->request->tahun_id) {
-            $data->where('tmkamus_kpi.tmtahun_id', $this->request->tahun_id);
-        }
-        if ($this->request->unit_id) {
-            $data->where('tmkamus_kpi.unit_pengelola_kpi', $this->request->unit_id);
-        }
-        $sql = $data->get();
-
-        return DataTables::of($sql)
-            ->editColumn('status', function ($p) {
-
-                $id = isset($p->tmtable_assigment_id) ? $p->tmtable_assigment_id : 0;
-                return Properti_app::assignment_status($id);
-
-            }, true)
-
-            ->editColumn('child_prospective', function ($p) {
-                return Properti_app::Child_prosepective($p->parent_id_pr);
-            }, true)
-
-            ->editColumn('action', function ($p) {
-                return '<a href="" class="btn btn-sm btn-clean btn-icon" title="Assignemn data as unit kerja" id="view_data" data-id="' . $p->idnya . '"><i class="fa fa-plus"></i></a>
-                        <a href="" class="btn btn-sm btn-clean btn-icon" id="view"  title="Detail data" data-id="' . $p->idnya . '"><i class="fa fa-minus"></i></a> ';
-            }, true)
-            ->editColumn('tmtahun_id', function ($p) {
-                return $p->tahun;
-            }, true)
-            ->editColumn('unit_pengelola_kpi', function ($p) {
-                return $p->unit_pengelola_kpi;
-            }, true)
-            ->editColumn('nama', function ($p) {
-                return $p->name;
-            }, true)
-            ->addIndexColumn()
-            ->rawColumns(['usercrate', 'action', 'id', 'status',
-                'sub',
-                'kpi',
-                'child_prospective',
-                'total',
-
-            ])->toJson();
-    }
     public function create()
     {
-        //
+
+        if ($this->request->ajax()) {
+            $assingment_id = $this->request->tmprospektif_id;
+            if ($this->request->status == "prospektiff") {
+                $data = tmprospektif::find($assingment_id);
+                $nama_prospektif = $data->nama_prospektif;
+                $tmprospektif_id = $data->id;
+                $tmprospektif_sub_id = 0;
+            } else if ($this->request->status == "subprospektiff") {
+                $data = tmprospektif_sub::find($assingment_id);
+                $nama_prospektif = $data->nama_prospektif_sub;
+                $tmprospektif_id = 0;
+                $tmprospektif_sub_id = $data->id;
+
+            }
+            return view($this->view . 'form_add', [
+                'title' => 'Tambah data prospektif',
+                'nama_prospektif' => $nama_prospektif,
+                'tmprospektif_id' => $tmprospektif_id,
+                'tmprospektif_sub_id' => $tmprospektif_sub_id,
+                'kamus' => tmkamus_kpi::get(),
+                'parameter' => '',
+            ]);
+
+        }
     }
 
     /**
@@ -248,9 +264,39 @@ class Assignmentcontroller extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+        $this->request->validate([
+            'tmkamus_kpi_id' => 'required',
+            'tmprospektif_id' => 'required',
+            'tmprospektif_sub_id' => 'required',
+            // 'tmunit_id' => 'required',
+            // 'catatan' => 'required',
+            // 'status' => 'required',
+            'sub' => 'required',
+            'kpi' => 'required',
+            'total' => 'required',
+        ]);
+
+        $data = new tmtable_assigment;
+        $data->tmkamus_kpi_id = $this->request->tmkamus_kpi_id;
+        $data->tmprospektif_id = $this->request->tmprospektif_id;
+        $data->tmprospektif_sub_id = $this->request->tmprospektif_sub_id;
+        $data->tmunit_id = $this->request->tmunit_id;
+        $data->catatan = $this->request->catatan;
+        $data->user_id = $this->request->user_id;
+        $data->updated_at = $this->request->updated_at;
+        $data->created_at = $this->request->created_at;
+        $data->status = $this->request->status;
+        $data->sub = $this->request->sub;
+        $data->kpi = $this->request->kpi;
+        $data->total = $this->request->total;
+        $data->save();
+        return response()->json([
+            'status' => 1,
+            'messages' => 'data berhasil disimpan',
+        ]);
+
     }
 
     /**
@@ -286,15 +332,21 @@ class Assignmentcontroller extends Controller
     {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        try {
+
+            tmtable_assigment::where('tmkamus_kpi_id', $this->request->id)->delete();
+
+            return response()->json([
+                'status' => 1,
+                'msg' => 'Data berhasil di hapus',
+            ]);
+        } catch (tmtable_assigment $t) {
+            return response()->json([
+                'status' => 2,
+                'msg' => $t,
+            ]);
+        }
     }
 }

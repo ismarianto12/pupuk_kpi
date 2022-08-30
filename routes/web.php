@@ -42,9 +42,9 @@ Route::group(['middleware' => ['auth', 'delbastam', 'api']], function () {
         Route::post('menu_save_position', [MenuController::class, 'save_postion'])->name('menu_save_position');
     });
     Route::prefix('kamus')->name('kamus.')->group(function () {
-        Route::get('assingment', [Assignmentcontroller::class, 'index'])->name('assingment');
-        Route::get('load_unit/{id}', [Assignmentcontroller::class, 'load_unit'])->name('load_unit');
-        Route::post('save_assingment', [Assignmentcontroller::class, 'save_assingment'])->name('save_assingment');
+        Route::resource('assingment', Assignmentcontroller::class);
+        // Route::get('load_unit/{id}', [Assignmentcontroller::class, 'load_unit'])->name('load_unit');
+        // Route::post('save_assingment', [Assignmentcontroller::class, 'save_assingment'])->name('save_assingment');
 
     });
     Route::prefix('master')->name('master.')->group(function () {
@@ -116,7 +116,7 @@ Route::group(['middleware' => ['auth', 'delbastam', 'api']], function () {
         Route::post('tahun', [TmtahunController::class, 'api'])->name('tahun');
         Route::post('user', [UserController::class, 'api'])->name('user');
         Route::post('kamus', [TmkamusKpiController::class, 'api'])->name('kamus');
-        Route::post('kamus_sub', [TmkamusKpiSubController::class, 'api'])->name('subkamus');
+        Route::post('kamus_sub', [TmkamusKpiSubController::class, 'api'])->name('kamus_sub');
         Route::post('prospektif', [TmprospektifController::class, 'api'])->name('prospektif');
         Route::post('prospektif_sub', [TmprospektifSubController::class, 'api'])->name('prospektif_sub');
         Route::post('cabang_perushaan', [TmcabangpupukController::class, 'api'])->name('cabang_perushaan');
@@ -134,10 +134,14 @@ Route::group(['middleware' => ['auth', 'delbastam', 'api']], function () {
         Route::get('status_kamus/{status}', [TmkamusKpiController::class, 'status_kamu'])->name('status_kamu');
     });
 
-    Route::prefix('assigmen')->name('assignmen.')->group(function(){
-        Route::get('prospektif_parent',[TmprospektifController::class,'prospektif_parent'])->name('prospektif_parent');
-        Route::get('subprospektif',[TmprospektifController::class,'prospektif_parent'])->name('prospektif_parent');
-        Route::get('kamus_sub',[TmkamusKpiSubController::class,'kamus_sub'])->name('kamus_sub');
+    Route::prefix('assignmen')->name('assignmen.')->group(function () {
+        Route::get('prospektif_parent', [TmprospektifController::class, 'prospektif_parent'])->name('prospektif_parent');
+        Route::get('prospektif', [TmprospektifController::class, 'prospektif'])->name('prospektif');
+        Route::get('subprospektif', [TmprospektifSubController::class, 'prospektif_parent'])->name('prospektif_parent');
+        Route::get('kamus_sub', [TmkamusKpiSubController::class, 'kamus_sub'])->name('kamus_sub');
+
+        Route::get('parameter_table', [Assignmentcontroller::class, 'parameter_table'])->name('parameter_table');
+        Route::get('test_table', [Assignmentcontroller::class, 'test_table'])->name('test_table');
 
     });
     Route::post('jenis_show/{id}', [SuratController::class, 'carijenis'])->name('jenis_show');

@@ -2,24 +2,6 @@
 @section('title', 'Assigment data kamus kpi per unit kerja')
 @section('content')
 
-    <div class="modal fade" id="formmodal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="title">
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form_content">
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 @section('toolbars')
     @include('layouts.toolbars', [
         'url' => '#',
@@ -28,10 +10,33 @@
         'ajax_button' => null,
     ])
 @endsection
+<div class="modal fade" id="_xformmodal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="title">
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form_content">
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="card card-custom gutter-b">
+
     <div class="card-body">
+
         <div class="card-header">
+
+
             <div class="form-group row">
                 <label class="control-label col-md-3">
                     Unit Kerja </label>
@@ -65,18 +70,25 @@
             </div>
         </div>
 
-        <div class="table-responsive" style="overflow:auto">
-            <table id="datatable" class="display table-hover" style="width: 100%; font-size: 12px;">
+        <div class="table-responsive">
+            <table id="datatable" class="display table table-bordered table-hover"  style="overflow:auto;width:120%">
                 <thead>
                     <tr>
-                        <th><strong>No</strong></th>
-                        <th><strong>KPI</strong></th>
-                        <th><strong>Satuan</strong></th>
-                        <th><strong>Target</strong></th>
-                        <th><strong>Polaritas</strong></th>
-                        <th>Action</th>
+                        <th rowspan="2"><strong>KPI</strong></th>
+                        <th rowspan="2"><strong>Satuan</strong></th>
+                        <th rowspan="2"><strong>Target</strong></th>
+                        <th rowspan="2"><strong>Polaritas</strong></th>
+                        <th colspan="4" class="text-center">
+                            <b>Bobot</b>
+                        </th>
                     </tr>
+                    <tr>
+                        <th>Sub</th>
+                        <th>KPI</th>
+                        <th>Total</th>
+                        <th>Action</th>
 
+                    </tr>
                 </thead>
                 <tbody>
                 </tbody>
@@ -88,126 +100,40 @@
 <script>
     jQuery(document).ready(function() {
         $('#unit_id').select2({
-            placeholder: "Pilih data unit kerja",
-            initSelection: function(element, callback) {
-                console.log(callback);
-
-            }
+            placeholder: "Pilih data unit kerja"
         });
 
         $('#tahun_id').select2({
-            placeholder: "Pilih data tahun",
-            initSelection: function(element, callback) {
-
-                console.log(callback);
-            }
-
+            placeholder: "Pilih data tahun"
         });
 
-
-        function prospektif_parent() {
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            order: [1, 'asc'],
-            pageLength: 10,
-            ajax: {
-                url: "{{ route('assignmen.prospektif') }}",
-                method: 'POST',
-                _token: "{{ csrf_token() }}",
-                data: function(data) {
-                    data.tahun_id = $('#tahun_id').val();
-                }
-            },
-
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false,
-                    align: 'center',
-                }, {
-                    data: 'nama_kpi',
-                    name: 'nama_kpi',
-                    width: '500px'
-                }, {
-                    data: 'nama_satuan',
-                    name: 'nama_satuan',
-                },
-                {
-                    data: 'target',
-                    name: 'target',
-                    width: '150px'
-                },
-                {
-                    data: 'nama_polaritas',
-                    name: 'nama_polaritas',
-                    width: '450px'
-                },
-                {
-                    data: 'action',
-                    name: 'action'
-                }
-            ],
-
-        }
-
-        function prospektif_child() {
-
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            order: [1, 'asc'],
-            pageLength: 10,
-            ajax: {
-                url: "{{ route('assignmen.subprospektif') }}",
-                method: 'POST',
-                _token: "{{ csrf_token() }}",
-                data: function(data) {
-                    data.tahun_id = $('#tahun_id').val();
-                }
-            },
-
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false,
-                    align: 'center',
-                }, {
-                    data: 'nama_kpi',
-                    name: 'nama_kpi',
-                    width: '500px'
-                }, {
-                    data: 'nama_satuan',
-                    name: 'nama_satuan',
-                },
-                {
-                    data: 'target',
-                    name: 'target',
-                    width: '150px'
-                },
-                {
-                    data: 'nama_polaritas',
-                    name: 'nama_polaritas',
-                    width: '450px'
-                },
-                {
-                    data: 'action',
-                    name: 'action'
-                }
-            ],
-
-
-        }
-
-
         var table = $('#datatable').DataTable({
+            ordering: false,
+            iDisplayLength: 100,
             processing: true,
-            serverSide: true,
-            responsive: true,
-            order: [1, 'asc'],
-            pageLength: 10,
+
+
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        orthogonal: 'export'
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        orthogonal: 'export'
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        orthogonal: 'export'
+                    }
+                }
+            ],
+
             ajax: {
                 url: "{{ route('api.assingment') }}",
                 method: 'POST',
@@ -218,15 +144,9 @@
             },
 
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false,
-                    align: 'center',
-                }, {
                     data: 'nama_kpi',
                     name: 'nama_kpi',
-                    width: '500px'
+
                 }, {
                     data: 'nama_satuan',
                     name: 'nama_satuan',
@@ -234,24 +154,110 @@
                 {
                     data: 'target',
                     name: 'target',
-                    width: '150px'
+
                 },
                 {
                     data: 'nama_polaritas',
                     name: 'nama_polaritas',
-                    width: '450px'
+
+                },
+                {
+                    data: 'sub',
+                    name: 'sub',
+
+                },
+                {
+                    data: 'kpi',
+                    name: 'kpi',
+
+                },
+                {
+                    data: 'total',
+                    name: 'total',
+
                 },
                 {
                     data: 'action',
-                    name: 'action'
+                    name: 'action',
+
                 }
             ],
+            createdRow: function(row, data, dataIndex) {
+                // Use empty value in the "Office" column
+                // as an indication that grouping with COLSPAN is needed
+                //  if (data.status === 'prospektiff') {
+                //                     $('td:eq(0)', row).attr('colspan', 5);
+                //                     $('td:eq(2)', row).css('display', 'none');
+                //                     $('td:eq(3)', row).css('display', 'none');
+                //                     $('td:eq(4)', row).css('display', 'none');
+                //                     $('td:eq(5)', row).css('display', 'none');
+
+                //                 } else if (data.status === 'subprospektiff') {
+
+                //                     $('td:eq(0)', row).attr('colspan', 5);
+                //                     $('td:eq(2)', row).css('display', 'none');
+                //                     $('td:eq(3)', row).css('display', 'none');
+                //                     $('td:eq(4)', row).css('display', 'none');
+                //                     $('td:eq(5)', row).css('display', 'none');
+                //                 }
+            }
+        });
+
+
+
+        $('#datatable').on('click', '#create', function(e) {
+            e.preventDefault();
+            $('#_xformmodal').modal('show');
+            $('.modal-dialog').css({
+                'min-width': '70%'
+            });
+
+            id = $(this).data('id');
+            status = $(this).data('status');
+            addUrl = '{{ route('kamus.assingment.create') }}?tmprospektif_id=' + id + '&status=' +
+                status;
+            $('#form_content').load(addUrl);
+        });
+
+
+        $('#datatable').on('click', '#delete', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'confirm',
+                text: 'Anda akan menghapus data ini ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    id = $(this).data('id');
+                    $.post("{{ route('kamus.assingment.destroy', ':id') }}", {
+                        '_method': 'DELETE',
+                        'id': id
+                    }, function(data) {
+
+                        toastr.success('data kamus berhasil di hapus');
+
+
+                        $('#datatable').DataTable().ajax.reload();
+                    }, "JSON").fail(function(data) {
+
+
+
+                    });
+                }
+
+            });
         });
         $('select').on('change', function() {
             $('#datatable').DataTable().ajax.reload();
-        })
+        });
 
     });
+
     @include('layouts.tablechecked');
 
     function del() {
@@ -262,7 +268,7 @@
         if (c.length == 0) {
             $.alert("Silahkan memilih data yang akan dihapus.");
         } else {
-            $.post("{{ route('master.kamus.destroy', ':id') }}", {
+            $.post("{{ route('kamus.assingment.destroy', ':id') }}", {
                 '_method': 'DELETE',
                 'id': c
             }, function(data) {
@@ -299,45 +305,5 @@
             });
         }
     }
-
-    // addd
-    $(function() {
-        $('#add_data').on('click', function() {
-            $('#formmodal').modal('show');
-            $('.modal-dialog').css({
-                'min-width': '90%'
-            });
-            addUrl =
-                '{{ route('master.kamus.create') }}';
-            $('#form_content').load(addUrl);
-        });
-
-        // edit
-        $('#datatable').on('click', '#view_data', function(e) {
-            e.preventDefault();
-            $('.modal-dialog').css({
-                'min-width': '65%'
-            });
-            $('#formmodal').modal('show');
-
-            id = $(this).data('id');
-            addUrl =
-                '{{ route('kamus.load_unit', ':id') }}'.replace(':id', id);
-            $('#form_content').load(addUrl);
-        })
-        $('#datatable').on('click', '#view', function(e) {
-            e.preventDefault();
-            $('.modal-dialog').css({
-                'min-width': '60%'
-            });
-            $('#formmodal').modal('show');
-            id = $(this).data('id');
-            addUrl =
-                '{{ route('master.kamus.show', ':id') }}'.replace(':id', id);
-            $('#form_content').load(
-                addUrl);
-
-        })
-    });
 </script>
 @endsection

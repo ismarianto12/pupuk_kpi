@@ -9,10 +9,10 @@
 
      <label class="control-label"> Nama Prospektif</label>
      *) required
-     <input class="form-control" name='nama_prospektif' value="" />
+     <input class="form-control" name='nama_prospektif' value="" required />
      <label class="control-label"> Kode </label>
      *) jika ada
-     <input class="form-control" name='kode' value="" />
+     <input class="form-control" name='kode' value="" required />
      <label class="control-label"> Assing ke Unit : </label>
      *) required
      <label class="control-label col-md-6"><b>Assign To :</b></label>
@@ -21,14 +21,14 @@
      @foreach (Properti_app::getUnitkerja() as $units)
          <div class="checkbox-inline">
              <label class="checkbox checkbox-success">
-                 <input type="checkbox" name="units_kerja[]" value="{{ $units->id }}" />
+                 <input type="checkbox" name="units_kerja[]" value="{{ $units->id }}" required/>
                  <span></span>{{ $units->level }}</label>
          </div>
      @endforeach
 
      <label class="control-label"> Tahun KPI</label>
      *) require one
-     <select class="form-control" name="tmtahun_id" class="form-control">
+     <select class="form-control" name="tmtahun_id" class="form-control" required>
          @foreach (Properti_app::getActiveYear() as $tahuns)
              <option value={{ $tahuns->id }}>{{ $tahuns->tahun }}</option>
          @endforeach

@@ -7749,7 +7749,6 @@ a.close.disabled {
   background-color: #ffffff;
   background-clip: padding-box;
   border: 0 solid rgba(0, 0, 0, 0.2);
-  border-radius: 0.42rem;
   -webkit-box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
   outline: 0;
@@ -7864,7 +7863,7 @@ a.close.disabled {
 
   .modal-content {
     -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    box-shadow: 15px 18rem 14rem rgb(0 0 0 / 10%);
   }
 
   .modal-sm {
@@ -99392,14 +99391,16 @@ body {
     left: 70px;
   }
 }
- 
-.modal-body>.card{
-  box-shadow:unset
-}     
+
+.modal-body>.card {
+  box-shadow: unset
+}
+
 /* bunlde add class css */
 
 
 .preloader {
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -99421,5 +99422,9 @@ body {
 }
 
 div.dataTables_wrapper {
-	width:100% !important;
+  width: 100% !important;
+}
+
+.button-group{
+  display: inherit;
 }

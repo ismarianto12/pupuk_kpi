@@ -41,11 +41,6 @@ class TmkamusKpiController extends Controller
         );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         if (!$this->request->ajax()) {
@@ -78,7 +73,6 @@ class TmkamusKpiController extends Controller
 
     public function api()
     {
-
         $icn = new Properti_app;
         $data = tmkamus_kpi::select(
             'tmkamus_kpi.id as idnya',
@@ -109,11 +103,10 @@ class TmkamusKpiController extends Controller
             ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
             ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
             ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id', 'left');
-        if ($this->request->unit_pengelola_id) {
-            $data->where('tmkamus_kpi.unit_pengelola_kpi', $this->request->unit_pengelola_id);
+        if ($this->request->tmtahun_id) {
+            $data->where('tmkamus_kpi.tmtahun_id', $this->request->tmtahun_id);
         }
         $data->get();
-
         return DataTables::of($data)
             ->editColumn('id', function ($p) {
                 return "<input type='checkbox' name='cbox[]' value='" . $p->idnya . "' />";

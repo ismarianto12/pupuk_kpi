@@ -6,6 +6,7 @@ use App\Helpers\Properti_app;
 use App\Models\tmfrekuensi;
 use App\Models\tmjenis_pengukuran;
 use App\Models\tmkamus_kpi;
+use App\Models\tmkamus_kpi_sub;
 use App\Models\tmpolaritas;
 use App\Models\tmsatuan;
 use App\Models\tmtahun;
@@ -52,9 +53,13 @@ class TmkamusKpiSubController extends Controller
         $polaritas = tmpolaritas::get();
         $unit_pengelola = tmunit::get();
         $jenis_pengukuran = tmjenis_pengukuran::get();
+        $tmkamus_kpi  = tmkamus_kpi::get();
+        
         $tahun = tmtahun::get();
         $title = 'kamus Akses User';
+
         return view($this->view . 'form_add', compact(
+            'tmkamus_kpi',
             'title',
             'satuan',
             'frekuensi',
@@ -72,7 +77,8 @@ class TmkamusKpiSubController extends Controller
     public function api()
     {
         $icn = new Properti_app;
-        $data = tmkamus_kpi::select(
+        $data = tmkamus_kpi_sub::select(
+            'tmkamus_kpi_sub.id as idnya',
             'tmkamus_kpi_sub.tmprospektif_sub_id',
             'tmkamus_kpi_sub.nama_kpi_sub',
             'tmkamus_kpi_sub.definisi',
@@ -93,6 +99,7 @@ class TmkamusKpiSubController extends Controller
             'tmkamus_kpi_sub.catatan',
             'tmkamus_kpi_sub.id_parent',
             'tmkamus_kpi_sub.tmkamus_kpi_id',
+            'tmkamus_kpi.nama_kpi',
             'tmfrekuensi.nama_frekuensi',
             'tmfrekuensi.kode',
             'tmpolaritas.kode',
@@ -101,13 +108,15 @@ class TmkamusKpiSubController extends Controller
             'tmsatuan.nama_satuan',
             'tmtahun.tahun',
             'tmunit.nama as nama_unit'
-        )->join('tmsatuan', 'tmkamus_kpi_sub.tmsatuan_id', '=', 'tmsatuan.id')
+        )
+            ->join('tmkamus_kpi', 'tmkamus_kpi.id', '=', 'tmkamus_kpi_sub.tmkamus_kpi_id', 'left')
+            ->join('tmsatuan', 'tmkamus_kpi_sub.tmsatuan_id', '=', 'tmsatuan.id')
             ->join('tmfrekuensi', 'tmkamus_kpi_sub.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
             ->join('tmpolaritas', 'tmkamus_kpi_sub.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
             ->join('tmtahun', 'tmkamus_kpi_sub.tmtahun_id', '=', 'tmtahun.id', 'left')
             ->join('tmunit', 'tmkamus_kpi_sub.unit_pengelola_kpi', '=', 'tmunit.id', 'left');
-        if ($this->request->unit_pengelola_id) {
-            $data->where('tmkamus_kpi_sub.unit_pengelola_kpi', $this->request->unit_pengelola_id);
+        if ($this->request->tmtahun_id) {
+            $data->where('tmkamus_kpi_sub.tmtahun_id', $this->request->tmtahun_id);
         }
         $data->get();
 
@@ -138,7 +147,7 @@ class TmkamusKpiSubController extends Controller
         $tkamus_parent_id = $this->request->tmkamus_parent_id;
 
         $icn = new Properti_app;
-        $data = tmkamus_kpi::select(
+        $data = tmkamus_kpi_sub::select(
             'tmkamus_kpi_sub.tmprospektif_sub_id',
             'tmkamus_kpi_sub.nama_kpi_sub',
             'tmkamus_kpi_sub.definisi',
@@ -251,21 +260,21 @@ class TmkamusKpiSubController extends Controller
             ]);
         }
 
-        $data = tmkamus_kpi::select(
-            'tmkamus_kpi.id as idnya',
-            'tmkamus_kpi.nama_kpi',
-            'tmkamus_kpi.definisi',
-            'tmkamus_kpi.tujuan',
-            'tmkamus_kpi.tmsatuan_id',
-            'tmkamus_kpi.formula_penilaian',
-            'tmkamus_kpi.target',
-            'tmkamus_kpi.tmfrekuensi_id',
-            'tmkamus_kpi.tmpolaritas_id',
-            'tmkamus_kpi.unit_pemilik_kpi',
-            'tmkamus_kpi.unit_pengelola_kpi',
-            'tmkamus_kpi.sumber_data',
-            'tmkamus_kpi.jenis_pengukuran',
-            'tmkamus_kpi.catatan',
+        $data = tmkamus_kpi_sub::select(
+            'tmkamus_kpi_sub.id as idnya',
+            'tmkamus_kpi_sub.nama_kpi_sub',
+            'tmkamus_kpi_sub.definisi',
+            'tmkamus_kpi_sub.tujuan',
+            'tmkamus_kpi_sub.tmsatuan_id',
+            'tmkamus_kpi_sub.formula_penilaian',
+            'tmkamus_kpi_sub.target',
+            'tmkamus_kpi_sub.tmfrekuensi_id',
+            'tmkamus_kpi_sub.tmpolaritas_id',
+            'tmkamus_kpi_sub.unit_pemilik_kpi',
+            'tmkamus_kpi_sub.unit_pengelola_kpi',
+            'tmkamus_kpi_sub.sumber_data',
+            'tmkamus_kpi_sub.jenis_pengukuran',
+            'tmkamus_kpi_sub.catatan',
             'tmfrekuensi.nama_frekuensi',
             'tmfrekuensi.kode',
             'tmpolaritas.kode',
@@ -273,17 +282,17 @@ class TmkamusKpiSubController extends Controller
             'tmsatuan.kode',
             'tmsatuan.nama_satuan',
             'tmtahun.tahun',
-            'tmkamus_kpi.created_at',
-            'tmkamus_kpi.updated_at',
+            'tmkamus_kpi_sub.created_at',
+            'tmkamus_kpi_sub.updated_at',
             'tmunit.nama as nama_unit',
-            \DB::raw('(SELECT GROUP_CONCAT(tmjenis_pengukuran.jenis_pengukuran) from tmjenis_pengukuran where FIND_IN_SET(tmjenis_pengukuran.id,tmkamus_kpi.jenis_pengukuran) > 0) as pengukuran_ll')
+            \DB::raw('(SELECT GROUP_CONCAT(tmjenis_pengukuran.jenis_pengukuran) from tmjenis_pengukuran where FIND_IN_SET(tmjenis_pengukuran.id,tmkamus_kpi_sub.jenis_pengukuran) > 0) as pengukuran_ll')
         )
-            ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id')
-            ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
-            ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
-            ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
-            ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id', 'left')
-            ->where('tmkamus_kpi.id', $id)->firstOrFail();
+            ->join('tmsatuan', 'tmkamus_kpi_sub.tmsatuan_id', '=', 'tmsatuan.id')
+            ->join('tmfrekuensi', 'tmkamus_kpi_sub.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
+            ->join('tmpolaritas', 'tmkamus_kpi_sub.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
+            ->join('tmtahun', 'tmkamus_kpi_sub.tmtahun_id', '=', 'tmtahun.id', 'left')
+            ->join('tmunit', 'tmkamus_kpi_sub.unit_pengelola_kpi', '=', 'tmunit.id', 'left')
+            ->where('tmkamus_kpi_sub.id', $id)->firstOrFail();
 
         // dd($data);
 
@@ -298,7 +307,7 @@ class TmkamusKpiSubController extends Controller
 
         return view($this->view . 'form_show', [
             'id' => $id,
-            'nama_kpi' => $data->nama_kpi,
+            'nama_kpi_sub' => $data->nama_kpi_sub,
             'definisi' => $data->definisi,
             'tujuan' => $data->tujuan,
             'tmsatuan_id' => $data->tmsatuan_id,
@@ -344,9 +353,9 @@ class TmkamusKpiSubController extends Controller
             ]);
         }
 
-        $data = tmkamus_kpi::findOrFail($id);
+        $data = tmkamus_kpi_sub::findOrFail($id);
         $id = $id;
-        $nama_kpi = $data->nama_kpi;
+        $nama_kpi_sub = $data->nama_kpi_sub;
         $definisi = $data->definisi;
         $tujuan = $data->tujuan;
         $tmsatuan_id = $data->tmsatuan_id;
@@ -367,10 +376,12 @@ class TmkamusKpiSubController extends Controller
         $unit_pengelola = tmunit::get();
         $jenis_pengukuran = tmjenis_pengukuran::get();
         $tahun = tmtahun::get();
+        
 
         return view($this->view . 'form_edit', [
             'id' => $id,
-            'nama_kpi' => $nama_kpi,
+            'tmkamus_kpi'=> tmkamus_kpi::get(), 
+            'nama_kpi_sub' => $nama_kpi_sub,
             'definisi' => $definisi,
             'tujuan' => $tujuan,
             'tmsatuan_id' => $tmsatuan_id,
@@ -408,9 +419,9 @@ class TmkamusKpiSubController extends Controller
             'definisi' => 'required',
         ]);
         try {
-            $data = tmkamus_kpi::find($id);
+            $data = tmkamus_kpi_sub::find($id);
 
-            $data->nama_kpi = $this->request->nama_kpi;
+            $data->nama_kpi_sub = $this->request->nama_kpi_sub;
             $data->definisi = $this->request->definisi;
             $data->tujuan = $this->request->tujuan;
             $data->tmsatuan_id = $this->request->tmsatuan_id;
@@ -429,7 +440,7 @@ class TmkamusKpiSubController extends Controller
                 'status' => 1,
                 'msg' => 'data berhasil update',
             ]);
-        } catch (\App\Models\tmkamus_kpi $t) {
+        } catch (\App\Models\tmkamus_kpi_sub $t) {
             return response()->json([
                 'status' => 1,
                 'msg' => $t,
@@ -440,7 +451,7 @@ class TmkamusKpiSubController extends Controller
     public function status_kamu($status)
     {
         if ($status == 0) {
-            $a = tmkamus_kpi::select('nama_kpi', 'definisi', 'tujuan', 'id')->get();
+            $a = tmkamus_kpi_sub::select('nama_kpi', 'definisi', 'tujuan', 'id')->get();
         } else {
             $a = [];
         }
@@ -457,16 +468,16 @@ class TmkamusKpiSubController extends Controller
     {
         try {
             if (is_array($this->request->id)) {
-                tmkamus_kpi::whereIn('id', $this->request->id)->delete();
+                tmkamus_kpi_sub::whereIn('id', $this->request->id)->delete();
             } else {
-                tmkamus_kpi::whereid($this->request->id)->delete();
+                tmkamus_kpi_sub::whereid($this->request->id)->delete();
             }
 
             return response()->json([
                 'status' => 1,
                 'msg' => 'Data berhasil di hapus',
             ]);
-        } catch (tmkamus_kpi $t) {
+        } catch (tmkamus_kpi_sub $t) {
             return response()->json([
                 'status' => 2,
                 'msg' => $t,

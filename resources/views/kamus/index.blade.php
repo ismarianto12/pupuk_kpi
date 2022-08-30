@@ -51,19 +51,20 @@
 
             <div class="form-group row">
                 <label class="control-label col-md-3">
-                    Bidang </label>
+                    Tahun</label>
                 <br />
                 <div class="col-md-4">
 
-                    <select class="form-control" name="bidang" id="bidang">
-                        <option value="">--Semua Bidang--</option>
-                        @foreach ($bidang as $bidangs)
-                            <option value="{{ $bidangs->id }}">
-                                {{ $bidangs->nama }}
+                    <select class="form-control" name="tmtahun_id" id="tmtahun_id">
+                        <option value="">--Tahun--</option>
+                        @foreach (Properti_app::getTahunActive() as $tahuns)
+                            <option value="{{ $tahuns->id }}">
+                                {{ $tahuns->tahun }}
                             </option>
                         @endforeach
                     </select>
                 </div>
+
             </div>
         </div>
 
@@ -104,7 +105,7 @@
                 method: 'POST',
                 _token: "{{ csrf_token() }}",
                 data: function(data) {
-                    data.unit_pengelola_id = $('#bidang').val();
+                    data.tmtahun_id = $('#tmtahun_id').val();
                 },
                 _token: "{{ csrf_token() }}",
             },

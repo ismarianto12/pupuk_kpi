@@ -2,24 +2,6 @@
 @section('title', 'Assigment data kamus kpi per unit kerja')
 @section('content')
 
-    <div class="modal fade" id="formmodal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="title">
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form_content">
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 @section('toolbars')
     @include('layouts.toolbars', [
         'url' => '#',
@@ -28,6 +10,25 @@
         'ajax_button' => null,
     ])
 @endsection
+<div class="modal fade" id="_xformmodal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="title">
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form_content">
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="card card-custom gutter-b">
 
@@ -70,15 +71,22 @@
         </div>
 
         <div class="table-responsive" style="overflow:auto">
-            <table id="datatable" class="display table-hover" style="width: 100%; font-size: 12px;">
+            <table id="datatable" class="display table table-striped table-hover" style="width: 150%; font-size: 12px;">
                 <thead>
                     <tr>
-                        <th><strong>No</strong></th>
-                        <th><strong>KPI</strong></th>
-                        <th><strong>Satuan</strong></th>
-                        <th><strong>Target</strong></th>
-                        <th><strong>Polaritas</strong></th>
-
+                        <th rowspan="2"><strong>No</strong></th>
+                        <th rowspan="2"><strong>KPI</strong></th>
+                        <th rowspan="2"><strong>Satuan</strong></th>
+                        <th rowspan="2"><strong>Target</strong></th>
+                        <th rowspan="2"><strong>Polaritas</strong></th>
+                        <th colspan="4" class="text-center">
+                            <b>Bobot</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Sub</th>
+                        <th>KPI</th>
+                        <th>Total</th>
                         <th>Action</th>
 
                     </tr>
@@ -100,6 +108,7 @@
         $('#tahun_id').select2({
             placeholder: "Pilih data tahun"
         });
+
         var table = $('#datatable').DataTable({
             processing: true,
             serverSide: true,
@@ -140,42 +149,78 @@
                     width: '450px'
                 },
                 {
+                    data: 'sub',
+                    name: 'sub',
+                    width: '150px'
+                },
+                {
+                    data: 'kpi',
+                    name: 'kpi',
+                    width: '150px'
+                },
+                {
+                    data: 'total',
+                    name: 'total',
+                    width: '150px'
+                }, {
                     data: 'action',
                     name: 'action'
                 }
             ],
-
-            rowGroup: {
-                emptyDataGroup: '',
-                emptyDataSrc: '',
-                dataSrc: function(row) {
-
-                    if (row.nama_prospektif_sub == null) {
-                        return $('<td/>')
-                            .append('<tr><td colspan="10">' + row.nama_prospektif +
-                                '</td></tr>');
-                    } else {
-                        return $('<td/>')
-                            .append('<tr><td colspan="10">' + row.nama_prospektif +
-                                '</td></tr><tr><td colspan="10">' + row
-                                .nama_prospektif_sub + '</td></tr><tr></tr>' + row
-                                .nama_prospektif_sub + '</td></tr><tr><td>' + row.nama_kpi_sub +
-                                '</td><td>' + row.nama_kpi_sub + '</td></tr>');
-                    }
-
-
-                },
-                endRender: null,
+            createdRow: function(row, data, dataIndex) {
+                if (data[0] === '') {
+                    $('td:eq(0)', row).attr('colspan', 8);
+                    $('td:eq(2)', row).css('display', 'none');
+                    $('td:eq(3)', row).css('display', 'none');
+                    $('td:eq(4)', row).css('display', 'none');
+                    $('td:eq(5)', row).css('display', 'none');
+                }
             }
+        });
 
+
+        $('#datatable').on('click', '#create', function(e) {
+            e.preventDefault();
+            $('#_xformmodal').modal('show');
+            $('.modal-dialog').css({
+                'min-width': '70%'
+            });
+
+            addUrl =
+                '{{ route('kamus.assingment.create') }}';
+            $('#form_content').load(addUrl);
+        })
+        $('#datatable').on('click', '#delete', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'confirm',
+                text: 'Anda akan menghapus data ini ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    id = $(this).data('id');
+                    addUrl =
+                        '{{ route('kamus.assingment.destroy', ':id') }}'.replace(':id', id);
+                    $('#form_content').load(
+                        addUrl);
+
+
+                }
+
+            });
         });
 
 
         $('select').on('change', function() {
             $('#datatable').DataTable().ajax.reload();
-        })
-
+        });
     });
+
     @include('layouts.tablechecked');
 
     function del() {
@@ -186,7 +231,7 @@
         if (c.length == 0) {
             $.alert("Silahkan memilih data yang akan dihapus.");
         } else {
-            $.post("{{ route('master.kamus.destroy', ':id') }}", {
+            $.post("{{ route('kamus.assingment.destroy', ':id') }}", {
                 '_method': 'DELETE',
                 'id': c
             }, function(data) {
@@ -223,45 +268,5 @@
             });
         }
     }
-
-    // addd
-    $(function() {
-        $('#add_data').on('click', function() {
-            $('#formmodal').modal('show');
-            $('.modal-dialog').css({
-                'min-width': '90%'
-            });
-            addUrl =
-                '{{ route('master.kamus.create') }}';
-            $('#form_content').load(addUrl);
-        });
-
-        // edit
-        $('#datatable').on('click', '#view_data', function(e) {
-            e.preventDefault();
-            $('.modal-dialog').css({
-                'min-width': '65%'
-            });
-            $('#formmodal').modal('show');
-
-            id = $(this).data('id');
-            addUrl =
-                '{{ route('kamus.load_unit', ':id') }}'.replace(':id', id);
-            $('#form_content').load(addUrl);
-        })
-        $('#datatable').on('click', '#view', function(e) {
-            e.preventDefault();
-            $('.modal-dialog').css({
-                'min-width': '60%'
-            });
-            $('#formmodal').modal('show');
-            id = $(this).data('id');
-            addUrl =
-                '{{ route('master.kamus.show', ':id') }}'.replace(':id', id);
-            $('#form_content').load(
-                addUrl);
-
-        })
-    });
 </script>
 @endsection

@@ -10,13 +10,13 @@
 
          <label class="control-label"> Nama Sub Prospektif</label>
          *) required
-        
+
          <input class="form-control" name='nama_prospektif_sub' value="{{ $nama_prospektif_sub }}" />
          <label class="control-label"> Sub Prospektif Kode </label>
-         *)   
+         *)
          <input class="form-control" name='kode' value="{{ $kode }}" />
          <label class="control-label"> Assing ke Unit : </label>
-          
+
          <br /><br /><br /><br />
          @foreach (Properti_app::getUnitkerja() as $units)
              @php
@@ -29,7 +29,7 @@
              </div>
          @endforeach
          <label class="control-label"> Tahun KPI</label>
-         *) require 
+         *) require
          <select class="form-control" name="tmtahun_id" class="form-control">
              @foreach (Properti_app::getActiveYear() as $tahuns)
                  <option value={{ $tahuns->id }}>{{ $tahuns->tahun }}</option>
@@ -81,7 +81,7 @@
                      $('#formmodal').modal('hide');
 
                      toastr.success('data pegawai berhasil di simpan');
- 
+
                  },
                  error: function(data) {
                      var div = $('.container');

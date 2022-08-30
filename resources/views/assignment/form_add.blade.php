@@ -1,131 +1,38 @@
  <div class="card">
      <div class="card-header">
-         <h4 class="card-title"><i class="fa fa-copy"></i>Tambah Data Master Kamus</h4>
+         <h4 class="card-title"><i class="fa fa-plus"></i> {{ $nama_prospektif }}
+         </h4>
          <label class="control-label col-md-6"></label>
      </div>
-
      <div class="ket"></div>
+
+
+
      <div class="card-body">
          <form id="exampleValidation" method="POST" class="simpan needs-validation" novalidate="">
-             <div class="form-group row">
-
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Nama KPI</label>
-
-                     <input name="nama_kpi" class="form-control" id="definisi" required />
-                 </div>
-             </div>
-             <div class="form-group row">
-
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Definisi KPI</label>
-                     <textarea class="form-control" name="definisi" required></textarea>
-                 </div>
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Tujuan</label>
-                     <textarea class="form-control" name="tujuan" id="editor" required></textarea>
-                 </div>
-             </div>
-             <div class="form-group row">
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Satuan</label>
-
-                     <select id="tmsatuan_id" class="form-control" name="tmsatuan_id" required>
-                         @foreach ($satuan as $satuans)
-                             <option value="{{ $satuans->id }}">
-                                 {{ $satuans->nama_satuan }} </option>
-                         @endforeach
-                     </select>
-                 </div>
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Formula </label>
-                     <textarea class="form-control" name="formula_penilaian" id="editor1" required></textarea>
-                 </div>
-             </div>
-             <div class="form-group row">
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Target</label>
-                     <input name="target" class="form-control" id="target" required />
-                 </div>
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Frekuensi</label>
-                     <select class="form-control" id="tmfrekuensi_id" name="tmfrekuensi_id" required>
-
-                         @foreach ($frekuensi as $frekuensi)
-                             <option value="{{ $frekuensi->id }}">
-                                 {{ $frekuensi->nama_frekuensi }} </option>
-                         @endforeach
-                     </select>
-                 </div>
-             </div>
-             <div class="form-group row">
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Polaritas</label>
-                     <select id="tmpolaritas_id" class="form-control" name="tmpolaritas_id">
-                         @foreach ($polaritas as $polaritass)
-                             <option value="{{ $polaritass->id }}">
-                                 {{ $polaritass->nama_polaritas }} </option>
-                         @endforeach
-                     </select>
-
-                 </div>
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Unit Pemilik KPI</label>
-                     <input name="unit_pemilik_kpi" class="form-control" id="unit_pemilik_kpi" required />
-                 </div>
-             </div>
-             <div class="form-group row">
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Unit Pengelola</label>
-
-                     <select id="unit_pengelola" class="form-control" name="unit_pengelola_kpi">
-                         @foreach ($unit_pengelola as $unit_pengelolas)
-                             <option value="{{ $unit_pengelolas->id }}">
-                                 {{ $unit_pengelolas->nama }} </option>
-                         @endforeach
-                     </select>
-                 </div>
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Sumber data</label>
-                     <input name="sumber_data" class="form-control" id="sumber_data" required />
-                 </div>
-             </div>
-             <div class="form-group row">
-
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6"><b>Jenis Pengukuran :</b></label>
-                     <hr />
-                     <div style="margin-left:30px">
-                         @foreach ($jenis_pengukuran as $jenis_pengukurans)
-                             <div class="checkbox-inline">
-                                 <label class="checkbox checkbox-success">
-                                     <input type="checkbox" name="jenis_pengukuran[]"
-                                         value="{{ $jenis_pengukurans->id }}" />
-                                     <span></span>{{ $jenis_pengukurans->jenis_pengukuran }}</label>
-                             </div>
-                         @endforeach
-                     </div>
-                 </div>
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Tahun KPI</label>
-                     <select id="tahun_id" class="form-control" name="tahun_id">
-                         @foreach ($tahun as $tahuns)
-                             <option value="{{ $tahuns->id }}">
-                                 {{ $tahuns->tahun }}</option>
-                         @endforeach
-                     </select>
-                 </div>
-             </div>
+             <input type="hidden" name="tmprospektif_id" value="{{ $tmprospektif_id }}" />
+             <input type="hidden" name="tmprospektif_sub_id" value="{{ $tmprospektif_sub_id }}" />
 
              <div class="form-group row">
-
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6"><b>Catatan Kamus :</b></label>
-                     <textarea class="form-control" name="catatan_kamus" id="editor2"> </textarea>
-
-                 </div>
+                 <label class="form-label"><b>Pilih Kamus Kpi</b></label>
+                 <select class="form-control" name="tmkamus_kpi_id" id="tmkamus_kpi_id">
+                     @foreach ($kamus as $kamuss)
+                         <option value={{ $kamuss->id }}>{{ $kamuss->nama_kpi }}</option>
+                     @endforeach
+                 </select>
              </div>
-
+             <div class="form-group row">
+                 <label class="form-label">Sub</label>
+                 <input type="text" name="sub" class="form-control" />
+             </div>
+             <div class="form-group row">
+                 <label class="form-label">KPI</label>
+                 <input type="text" name="kpi" class="form-control" />
+             </div>
+             <div class="form-group row">
+                 <label class="form-label">Total</label>
+                 <input type="text" name="total" class="form-control" />
+             </div>
 
              <div class="card-footer">
                  <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i>Simpan data</button>
@@ -155,8 +62,8 @@
          CKEDITOR.replace('editor1');
          CKEDITOR.replace('editor2');
 
-         $('#unit_pengelola').select2({
-             placeholder: "Select a state"
+         $('#tmkamus_kpi_id').select2({
+             placeholder: "Pilih Kamus KPI"
          });
          $('#tahun_id').select2({
              placeholder: "Select a state"
@@ -184,15 +91,27 @@
                      'opacity': '0.2'
                  });
                  $.ajax({
-                     url: "{{ route('master.kamus.store') }}",
+                     url: "{{ route('kamus.assingment.store') }}",
                      method: "POST",
                      data: $(this).serialize(),
                      chace: false,
                      async: false,
+                     beforeSend: function() {
+                         Swal.showLoading();
+                     },
                      success: function(data) {
-                         $('#formmodal').modal('hide');
+                         Swal.fire({
+                             position: 'top-end',
+                             icon: 'success',
+                             title: 'Data berhasil di tambah',
+                             showConfirmButton: false,
+                             timer: 1500
+                         });
                          $('#datatable').DataTable().ajax.reload();
+
                          toastr.success('data kamus berhasil di simpan');
+                         $('#_xformmodal').modal('hide');
+
                      },
                      error: function(data) {
                          var div = $('#container');

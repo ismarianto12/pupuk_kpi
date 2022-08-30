@@ -1,11 +1,11 @@
- <h3> <i class="fa fa-copy"></i> {{ ucfirst($nama_kpi) }}</h3>
+ <h3> <i class="fa fa-copy"></i> {{ ucfirst($nama_kpi_sub) }}</h3>
  <br />
 
  <table class="table table-bordered">
 
      <tr>
          <th>Nama KPI</th>
-         <td>{{ $nama_kpi }}</td>
+         <td>{{ $nama_kpi_sub }}</td>
      </tr>
      <tr>
          <th>Definisi KPI</th>

@@ -67,6 +67,7 @@ class TmprospektifSubController extends Controller
             'users.name'
         )->join('users', 'tmprospektif_sub.user_id', '=', 'users.id')
             ->join('tmprospektif', 'tmprospektif.id', '=', 'tmprospektif_sub.tmprospektif_id')
+ 
             ->join('tmtahun', 'tmtahun.id', '=', 'tmprospektif_sub.tmtahun_id');
         if ($this->request->tmtahun_id) {
             $data->where('tmtahun_id', $this->request->tmtahun_id);

@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title"><i class="fa fa-copy"></i>Edit Data Master Kamus</h3>
+        <h3 class="card-title"><i class="fa fa-copy"></i>Edit {{ $nama_kpi_sub }}</h3>
         <label class="control-label col-md-6"></label>
     </div>
 
@@ -8,30 +8,11 @@
     <div class="card-body">
         <form id="exampleValidation" method="POST" class="simpan needs-validation" novalidate="">
             <div class="form-group row">
-                <div class="col-md-6">
-                    <label class="control-label col-md-6">Jenis Kamus KPI</label>
-
-                    <select class="form-control" name="jenis_kamus" id="jenis_kamus">
-                        @foreach (Properti_app::jenis_kamus() as $jenis => $val)
-                            <option value="{{ $jenis }}">{{ $val }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="control-label col-md-6">Parent / Child</label>
-                    <select class="form-control" name="parent_child" id="parent_child_id">
-                        <option value=""></option>
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="form-group row">
 
                 <div class="col-md-6">
                     <label class="control-label col-md-6">Nama KPI</label>
 
-                    <input name="nama_kpi" class="form-control" value="{{ $nama_kpi }}" id="definisi" required />
+                    <input name="nama_kpi" class="form-control" value="{{ $nama_kpi_sub }}" id="definisi" required />
                 </div>
             </div>
             <div class="form-group row">

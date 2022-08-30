@@ -1,6 +1,6 @@
  <div class="card">
      <div class="card-header">
-         <h4 class="card-title"><i class="fa fa-copy"></i>Tambah Data Master Kamus</h4>
+         <h4 class="card-title"><i class="fa fa-copy"></i>Tambah Data Master Sub Kamus</h4>
          <label class="control-label col-md-6"></label>
      </div>
 
@@ -8,24 +8,14 @@
      <div class="card-body">
          <form id="exampleValidation" method="POST" class="simpan needs-validation" novalidate="">
              <div class="form-group row">
-
                  <div class="col-md-6">
-                     <label class="control-label col-md-6">Jenis Kamus KPI</label>
-
-                     <select class="form-control" name="jenis_kamus" id="jenis_kamus">
-                         @foreach (Properti_app::jenis_kamus() as $jenis => $val)
-                             <option value="{{ $jenis }}">{{ $val }}</option>
+                     <label class="control-label col-md-6">Parent Kamus KPI</label>
+                     <select class="form-control" name="tmkamus_kpi_id" id="tmkamus_kpi_id">
+                         @foreach ($tmkamus_kpi as $tmkamus_kpis)
+                             <option value="{{ $tmkamus_kpis->id }}">{{ $tmkamus_kpis->nama_kpi }}</option>
                          @endforeach
                      </select>
                  </div>
-                 <div class="col-md-6">
-                     <label class="control-label col-md-6">Parent / Child</label>
-                     <select class="form-control" name="parent_child" id="parent_child_id">
-                         <option value=""></option>
-                     </select>
-                 </div>
-
-
              </div>
 
              <div class="form-group row">
@@ -175,7 +165,9 @@
          CKEDITOR.replace('editor');
          CKEDITOR.replace('editor1');
          CKEDITOR.replace('editor2');
-
+         $('#tmkamus_kpi_id').select2({
+             placeholder: "Pilih Parent Kamus"
+         });  
          $('#unit_pengelola').select2({
              placeholder: "Select a state"
          });

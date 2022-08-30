@@ -16,11 +16,15 @@
          <input class="form-control" name='kode' value="" />
          <label class="control-label"> Assing ke Unit : </label>
          *) required
-         <select class="form-control" name="units_kerja[]" class="form-control">
-             @foreach (Properti_app::getUnitkerja() as $units)
-                 <option value={{ $units->id }}>{{ $units->level }}</option>
-             @endforeach
-         </select>
+
+
+         @foreach (Properti_app::getUnitkerja() as $units)
+             <div class="checkbox-inline">
+                 <label class="checkbox checkbox-success">
+                     <input type="checkbox" name="units_kerja[]" value="{{ $units->id }}" />
+                     <span></span>{{ $units->level }}</label>
+             </div>
+         @endforeach
          <label class="control-label"> Tahun KPI</label>
          *) require one
          <select class="form-control" name="tmtahun_id" class="form-control">
@@ -31,7 +35,7 @@
 
          <div class="offcanvas-footer" kt-hidden-height="113" style="">
              <div class="text-right">
-             <br />
+                 <br />
                  <button type="submit" class="btn btn-primary text-weight-bold">Save</button>
                  <button type="reset" class="btn btn-danger text-weight-bold">Cancel</button>
 

@@ -1,5 +1,6 @@
 @extends('layouts.template')
 @section('title', 'Master Data Kamus')
+
 @section('content')
 
     <div class="modal fade" id="formmodal" role="dialog" aria-hidden="true">
@@ -31,6 +32,7 @@
 
 
 
+
 <div class="card card-custom gutter-b">
 
     <div class="card-body">
@@ -48,15 +50,15 @@
         <div class="card-header">
             <div class="form-group row">
                 <label class="control-label col-md-3">
-                    Bidang Unit Akses </label>
+                    Tahun</label>
                 <br />
                 <div class="col-md-4">
 
                     <select class="form-control" name="bidang" id="bidang">
-                        <option value="">--Semua Bidang--</option>
-                        @foreach ($bidang as $bidangs)
-                            <option value="{{ $bidangs->id }}">
-                                {{ $bidangs->nama }}
+                        <option value="">--Tahun--</option>
+                        @foreach (Properti_app::getTahunActive() as $tahuns)
+                            <option value="{{ $tahuns->id }}">
+                                {{ $tahuns->tahun }}
                             </option>
                         @endforeach
                     </select>
@@ -101,7 +103,7 @@
                 method: 'POST',
                 _token: "{{ csrf_token() }}",
                 data: function(data) {
-                    data.unit_pengelola_id = $('#bidang').val();
+                    data.tmtahun_id = $('#tmtahun_id').val();
                 },
                 _token: "{{ csrf_token() }}",
             },
@@ -113,8 +115,8 @@
                     align: 'center',
                     className: 'text-center'
                 }, {
-                    data: 'nama_kpi',
-                    name: 'nama_kpi',
+                    data: 'nama_kpi_sub',
+                    name: 'nama_kpi_sub',
                     width: '30%'
 
                 }, {
@@ -162,15 +164,23 @@
                     data: 'action',
                     name: 'action'
                 }
-            ]
+            ],
+            rowGroup: {
+                emptyDataGroup: '',
+                startRender: function(rows, group) {
+                    return $('<tr/>')
+                        .append(
+                            '<td colspan="10" style="background:#ddd;text-align:center;height: 14px;">' +
+                            group + '</td>')
+
+                },
+                endRender: null,
+                dataSrc: ['nama_kpi']
+            }
         });
-
-
-        $('select').on('change', function() {
-            $('#datatable').DataTable().ajax.reload();
-        })
-
     });
+
+
     @include('layouts.tablechecked');
 
     function del() {
@@ -219,15 +229,19 @@
         }
     }
 
-    // addd
     $(function() {
+
+        $('select').on('change', function() {
+            $('#datatable').DataTable().ajax.reload();
+        })
+        //created or delete it
         $('#add_data').on('click', function() {
             $('#formmodal').modal('show');
             $('.modal-dialog').css({
                 'min-width': '90%'
             });
             addUrl =
-                '{{ route('master.kamus.create') }}';
+                '{{ route('master.kamus_sub.create') }}';
             $('#form_content').load(addUrl);
         });
 
@@ -240,9 +254,9 @@
             $('#formmodal').modal('show');
 
             id = $(this).data('id');
-            addUrl =
-                '{{ route('master.kamus.edit', ':id') }}'.replace(':id', id);
-            $('#form_content').load(addUrl);
+            editUrl =
+                '{{ route('master.kamus_sub.edit', ':id') }}'.replace(':id', id);
+            $('#form_content').load(editUrl);
         })
         $('#datatable').on('click', '#view', function(e) {
             e.preventDefault();
@@ -251,12 +265,15 @@
             });
             $('#formmodal').modal('show');
             id = $(this).data('id');
+
             addUrl =
-                '{{ route('master.kamus.show', ':id') }}'.replace(':id', id);
+                '{{ route('master.kamus_sub.show', ':id') }}'.replace(':id', id);
             $('#form_content').load(
                 addUrl);
 
-        })
+        });
+
+
     });
 </script>
 @endsection

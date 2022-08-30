@@ -295,7 +295,8 @@
                                                 Kerja : {{ ucfirst(Auth::user()->name) }}</span>
                                         @else
                                             <span
-                                                class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">Level
+                                                class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3"><i
+                                                    class="fa fa-users"></i>&nbsp;&nbsp;Level
                                                 Akses : {{ ucfirst(Auth::user()->name) }}</span>
                                         @endif
 
