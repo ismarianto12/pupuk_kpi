@@ -3,9 +3,9 @@
 // by ismarianto
 namespace App\Helpers;
 
-use App\Http\Controllers\TmunitController;
 use App\Models\Jenis_surat;
 use App\Models\menu;
+use App\Models\menu_group;
 use App\Models\Tmbangunan;
 use App\Models\Tmlevel;
 use App\Models\tmprospektif;
@@ -1106,6 +1106,7 @@ class Properti_app
     // update data route aplikasi
     public static function buitlmenu($parent, $menu)
     {
+
         $html = "";
         if (isset($menu['parents'][$parent])) {
             if ($parent == '0') {
@@ -1125,10 +1126,7 @@ class Properti_app
                         </span>
                         <span class="menu-text">Dashboard</span>
                     </a>
-                </li><li class="menu-section">
-                <h4 class="menu-text">Main menu</h4>
-                <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
-            </li>';
+                </li>';
                 } else {
                     null;
                 }
@@ -1138,23 +1136,48 @@ class Properti_app
             }
             foreach ($menu['parents'][$parent] as $itemId) {
                 $icon = ($menu['items'][$itemId]->icon) ? $menu['items'][$itemId]->icon : '<i class="fa fa-bars"></i>';
-                //
+
+                $header_menu = menu_group::whereId($menu['items'][$itemId]->menu_group_id)->get();
+
+                if ($header_menu->count() > 0) {
+                    $html .= '<li class="menu-section">
+                    <h4 class="menu-text" style="color: #fff">' . $header_menu->first()->nama_group . '</h4>
+                    <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+
+                </li>';
+                }
+
                 if (!isset($menu['parents'][$itemId])) {
                     if (preg_match("/^http/", strtolower($menu['items'][$itemId]->link))) {
-                        $html .= "<li class='menu-item' class='menu-link'><a href='" . strtolower($menu['items'][$itemId]->link) . "' class='menu-link'><i class='menu-bullet menu-bullet-line'><span></span></i></i>" . $menu['items'][$itemId]->nama_menu . "</a></li>";
+                        $html .= "<li class='menu-item' class='menu-link'><a href='" . strtolower($menu['items'][$itemId]->link) . "' class='menu-link'><i class='menu-bullet menu-bullet-line'><span></i></i>" . $menu['items'][$itemId]->nama_menu . "</a></span><span class='menu-label'>
+                        <span class='label label-danger label-inline'>new</span><i class='menu-arrow'></i></li>";
                     } else {
                         if ($menu['items'][$itemId]->id_parent == 0):
-                            $html .= "<li class='menu-item' class='menu-link'><a href='" . Url('/') . '' . strtolower($menu['items'][$itemId]->link) . "' class='menu-link'>" . $icon . "&nbsp;&nbsp;<span class='menu-text'>" . $menu['items'][$itemId]->nama_menu . "</span></a></li>";
+                            $html .= "<li class='menu-item' class='menu-link'><a href='" . Url('/') . '' . strtolower($menu['items'][$itemId]->link) . "' class='menu-link'>" . $icon . "&nbsp;&nbsp;<span class='menu-text'>" . $menu['items'][$itemId]->nama_menu . "</span> </a></li>";
                         else:
                             $html .= "<li class='menu-item' class='menu-link'><a href='" . Url('/') . '' . strtolower($menu['items'][$itemId]->link) . "' class='menu-link'><i class='menu-bullet menu-bullet-line'><span></span></i></i><span class='menu-text'>" . $menu['items'][$itemId]->nama_menu . "</span></a></li>";
                         endif;
                     }
                 }
+
                 if (isset($menu['parents'][$itemId])) {
-                    if (preg_match("/^http/", strtolower($menu['items'][$itemId]->link))) {
-                        $html .= "<li class='menu-item menu-item-submenu' aria-haspopup='true' data-menu-toggle='hover'><a href='" . strtolower($menu['items'][$itemId]->link) . "' class='menu-link menu-toggle'>" . $icon . "&nbsp;&nbsp;<span class='menu-text'>" . $menu['items'][$itemId]->nama_menu . "</span> <i class='menu-arrow'></i></a>";
+
+                    $get_count = menu::where('id_parent', $menu['items'][$itemId]->id_menu)->get()->count();
+                    $fget_count = isset($get_count) ? $get_count : 0;
+                    if ($fget_count % 2) {
+                        $warna = 'success';
                     } else {
-                        $html .= "<li class='menu-item menu-item-submenu' aria-haspopup='true' data-menu-toggle='hover'><a href='" . strtolower($menu['items'][$itemId]->link) . "' class='menu-link menu-toggle'>" . $icon . "&nbsp;&nbsp;<span class='menu-text'>" . $menu['items'][$itemId]->nama_menu . "</span> <i class='menu-arrow'></i></a>";
+                        $warna = 'warning'; 
+                    } 
+                    if (preg_match("/^http/", strtolower($menu['items'][$itemId]->link))) {
+                        $html .= "<li class='menu-item menu-item-submenu' aria-haspopup='true' data-menu-toggle='hover'><a href='" . strtolower($menu['items'][$itemId]->link) . "' class='menu-link menu-toggle'>" . $icon . "&nbsp;&nbsp;<span class='menu-text'>" . $menu['items'][$itemId]->nama_menu . "</span> <span class='menu-label'>
+                        <span class='label label-" . $warna . " label-inline'>" . $fget_count . "</span>
+                    </span><i class='menu-arrow'></i></a>";
+                    } else {
+
+                        $html .= "<li class='menu-item menu-item-submenu' aria-haspopup='true' data-menu-toggle='hover'><a href='" . strtolower($menu['items'][$itemId]->link) . "' class='menu-link menu-toggle'>" . $icon . "&nbsp;&nbsp;<span class='menu-text'>" . $menu['items'][$itemId]->nama_menu . "</span><span class='menu-label'>
+                        <span class='label label-" . $warna . " label-inline'>" . $fget_count . "</span>
+                    </span> <i class='menu-arrow'></i></a>";
                     }
                     $html .= self::buitlmenu($itemId, $menu);
                     $html .= "</li>";
@@ -1174,7 +1197,8 @@ class Properti_app
             'link',
             'id_parent',
             'position',
-            'icon'
+            'icon',
+            'menu_group_id'
         )->where([
             "aktif" => "Ya",
         ])
@@ -1294,25 +1318,42 @@ class Properti_app
     </svg><!--end::Svg Icon--></span>';
     }
 
-public function getActiveYear()
-{ 
-    $data = tmtahun::select(
-                'id',
-                'tahun',
-                'kode',
-                'active',
-                'created_at',
-                'updated_at',
-                'user_id'
+    public static function getActiveYear()
+    {
+        $data = tmtahun::select(
+            'id',
+            'tahun',
+            'kode',
+            'active',
+            'created_at',
+            'updated_at',
+            'user_id'
 
-    )->where('active',1)->get();
-    return $data;
-}
+        )->where('active', 1)->get();
+        return $data;
+    }
 
+    public function getUnitkerja()
+    {
+        $data = Tmlevel::get();
+        return $data;
+    }
+    public function AssignStatus()
+    {
+        return [
+            1 => "Sesuai Ketentuan",
+            2 => "Tidak Sesuai Ketentuan",
+        ];
+    }
+    public static function Batch()
+    {
+        $data = tmtable_assigment::distinct()->select(\DB::raw('max(batch) as id_match'));
+        return isset($data->first()->id_match) ? $data->first()->id_match : 1;
+    }
 
-public function getUnitkerja()
-{ 
-    $data = Tmlevel::get();
-    return $data;
-}
+    public function getBatch()
+    {
+        return tmtable_assigment::distinct()->select('batch')->get();
+    }
+
 }

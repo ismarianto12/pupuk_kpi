@@ -7,7 +7,7 @@
      <div class="ket"></div>
      <div class="card-body">
          <form id="exampleValidation" method="POST" class="simpan needs-validation" novalidate="">
-           
+
 
              <div class="form-group row">
 
@@ -185,6 +185,11 @@
                  $('.card-body').css({
                      'opacity': '0.2'
                  });
+                 for (instance in CKEDITOR.instances) {
+                     CKEDITOR.instances.editor.updateElement();
+                     CKEDITOR.instances.editor1.updateElement();
+                     CKEDITOR.instances.editor2.updateElement();
+                 }
                  $.ajax({
                      url: "{{ route('master.kamus.store') }}",
                      method: "POST",
@@ -197,7 +202,7 @@
                          toastr.success('data kamus berhasil di simpan');
                      },
                      error: function(data) {
-                         var div = $('#container');
+                         var div = $('.container');
                          setInterval(function() {
                              var pos = div.scrollTop();
                              div.scrollTop(pos + 2);

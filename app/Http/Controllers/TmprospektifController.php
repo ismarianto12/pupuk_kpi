@@ -71,8 +71,8 @@ class TmprospektifController extends Controller
             'tmtahun.tahun',
             'users.name'
 
-        )->join('users', 'tmprospektif.user_id', '=', 'users.id')
-            ->join('tmtahun', 'tmtahun.id', '=', 'tmprospektif.tmtahun_id');
+        )->join('users', 'tmprospektif.user_id', '=', 'users.id','left')
+            ->join('tmtahun', 'tmtahun.id', '=', 'tmprospektif.tmtahun_id','left');
 
         if ($this->request->tmtahun_id) {
             $data->whehere('tmtahun_id', $this->request->tmtahun_id);
@@ -104,7 +104,11 @@ class TmprospektifController extends Controller
      */
     public function store()
     {
+
+        
+        
         $this->request->validate([
+            'tmlevel_id'=> 'required',
             'tmtahun_id' => 'required',
             'kode' => 'required',
         ]);
@@ -115,14 +119,15 @@ class TmprospektifController extends Controller
             $data->created_at = $this->request->created_at;
             $data->updated_at = $this->request->updated_at;
             $data->user_id = Auth::user()->id;
-            $data->tmlevel_id = implode(',', $this->request->units_kerja);
+            $data->tmlevel_id = implode(',', $this->request->tmlevel_id);
+            $data->target = $this->request->target;
             $data->save();
 
             return response()->json([
                 'status' => 1,
                 'msg' => 'data berhasil dtambah',
             ]);
-        } catch (\tmtahun $t) {
+        } catch (tmprospektif $t) {
             return response()->json([
                 'status' => 1,
                 'msg' => $t,
@@ -150,34 +155,29 @@ class TmprospektifController extends Controller
     public function edit($id)
     {
 
-        if (!$this->request->ajax()) {
-            return response()->json([
-                'data' => 'data null',
-                'aspx' => 'response aspx fail ',
-            ]);
-        }
-        $this->request->validate([
-            'nama_prospektif' => 'required',
-            'kode' => 'required',
-        ]);
+//     id
+        // nama_prospektif
+        // kode
+        // tmlevel_id
+        // tmtahun_id
+        // user_id
+        // updated_at
+        // created_at
         $data = tmprospektif::find($id);
         $id = $data->id;
         $nama_prospektif = $data->nama_prospektif;
         $kode = $data->kode;
-        $created_at = $data->created_at;
-        $updated_at = $data->updated_at;
+      
         $user_id = $data->user_id;
         $tmlevel_id = $data->tmlevel_id;
         $parent_id = $data->parent_id;
 
         $title = 'Edit data master tahun';
-        return view($this->view . 'form_edit', compact(
-
+        return view($this->view . 'form_edit', compact( 
             'id',
             'nama_prospektif',
             'kode',
-            'created_at',
-            'updated_at',
+         
             'user_id',
             'tmlevel_id',
             'parent_id',
@@ -186,15 +186,18 @@ class TmprospektifController extends Controller
     public function update($id)
     {
         $this->request->validate([
-            'nama_prospektif' => 'required',
+            'tmlevel_id'=> 'required',
+            'tmtahun_id' => 'required',
             'kode' => 'required',
         ]);
         try {
             $data = tmprospektif::find($id);
             $data->nama_prospektif = $this->request->nama_prospektif;
             $data->kode = $this->request->kode;
+          
             $data->user_id = Auth::user()->id;
-            $data->tmlevel_id = implode(',', $this->request->units_kerja);
+            $data->tmlevel_id = implode(',', $this->request->tmlevel_id);
+            $data->target = $this->request->target;
             $data->save();
 
             return response()->json([

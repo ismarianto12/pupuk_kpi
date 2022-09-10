@@ -30,6 +30,46 @@
         </div>
         <div class="card-body">
 
+            <div class="form-group row">
+                <label class="form-label col-md-3"> Tahun </label>
+                <div class="col-md-4">
+                    <select class="form-control" name="tmtahun_id" id="tmtahun_id">
+                        <option value="">all data</option>
+                        @foreach ($tahun as $tahuns)
+                            <option value="{{ $tahuns->id }}"> {{ $tahuns->tahun }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3">Parent Prospective </label>
+                <div class="col-md-4">
+                    <select class="form-control" name="tmprospektif_id" id="tmprospektif_id">
+                        <option value="">all data</option>
+
+                        @foreach ($prospektif as $prospektifs)
+                            <option value="{{ $prospektifs->id }}"> {{ $prospektifs->nama_prospektif }}</option>
+                        @endforeach
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3">Unit Kerja </label>
+                <div class="col-md-4">
+                    <select class="form-control" name="tmunit_kerja" id="unit_kerja">
+                        <option value="">all data</option>
+
+                        @foreach ($tmunit_kerja as $tmunit_kerjas)
+                            <option value="{{ $tmunit_kerjas->id }}"> {{ $tmunit_kerjas->nama }}</option>
+                        @endforeach
+                    </select>
+
+                </div>
+            </div>
+
 
             <table id="datatable" class="display table table-striped table-hover">
                 <thead>
@@ -75,6 +115,11 @@
                 url: "{{ route('api.prospektif_sub') }}",
                 method: 'POST',
                 _token: "{{ csrf_token() }}",
+                data: function(data) {
+                    data.tmtahun_id = $('#tmtahun_id').val();
+                    data.tmunit_kerja = $('#tmunit_kerja').val();
+
+                }
             },
             columns: [{
                     data: 'id',
@@ -116,9 +161,27 @@
                     name: 'action'
                 }
 
-            ]
+            ],
+            rowGroup: {
+                emptyDataGroup: '',
+                startRender: function(rows, group) {
+                    return $('<tr/>')
+                        .append(
+                            '<td colspan="10" style="background: #45d942; text-align: center; height: 14px; color: #fff;"><i class="fa fa-list"></i> ' +
+                            group + '</td>')
+
+                },
+                endRender: null,
+                dataSrc: ['nama_prospektif']
+            }
         });
+        $('select').on('change', function() {
+            $('#datatable').DataTable().ajax.reload();
+
+        })
     });
+
+
 
     @include('layouts.tablechecked');
 
@@ -184,9 +247,7 @@
             $('#overlay').addClass('offcanvas-overlay');
 
             addUrl = '{{ route('master.prospektif_sub.create') }}';
-            $('#form_content').html(
-                '<center><h3><img src="{{ asset('assets/img/loading.gif') }}" class="img-responsive" style="width:350px;height:250px"></h3></center>'
-            ).load(addUrl);
+            $('#form_content').load(addUrl);
         });
 
         $('#datatable').on('click', '#edit', function(e) {
@@ -198,9 +259,7 @@
             var id = $(this).data('id');
             addUrl =
                 '{{ route('master.prospektif_sub.edit', ':id') }}'.replace(':id', id);
-            $('#form_content').html(
-                '<center><h3><img src="{{ asset('assets/img/loading.gif') }}" class="img-responsive" style="width:350px;height:250px"></h3></center>'
-            ).load(addUrl);
+            $('#form_content').load(addUrl);
         });
 
     });

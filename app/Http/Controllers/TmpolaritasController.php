@@ -8,12 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use DataTables;
 
 class TmpolaritasController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+{ 
     protected $request;
     protected $route;
     protected $view;
@@ -85,12 +80,7 @@ class TmpolaritasController extends Controller
             ->rawColumns(['usercrate', 'action', 'id'])
             ->toJson();
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   
     public function store()
     {
         $this->request->validate([

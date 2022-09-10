@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\tmtahun;
+use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use DataTables;
 
 class TmtahunController extends Controller
 {
@@ -17,13 +17,12 @@ class TmtahunController extends Controller
     protected $request;
     protected $route;
     protected $view;
-    function __construct(Request $request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->view    = '.tahun.';
-        $this->route   = 'master.tahun.';
+        $this->view = '.tahun.';
+        $this->route = 'master.tahun.';
     }
-
 
     public function index()
     {
@@ -53,11 +52,11 @@ class TmtahunController extends Controller
             $id = $this->request->id;
             $active = $this->request->active;
             $data = tmtahun::find($id);
-            $data->active  = $active;
+            $data->active = $active;
             $data->save();
 
             return response()->json([
-                'msg' => 'Set tahun berhasil disimpan '
+                'msg' => 'Set tahun berhasil disimpan ',
             ]);
         }
     }
@@ -80,7 +79,7 @@ class TmtahunController extends Controller
                 return "<input type='checkbox' name='cbox[]' value='" . $p->idnya . "' />";
             })
             ->editColumn('action', function ($p) {
-                return  ' 
+                return '
                 <div class="d-flex justify-content-end flex-shrink-0">
                 <a href="#" id="edit" data-id="' . $p->idnya . '" class="btn btn-icon btn-warning btn-sm me-1"><i class="fa fa-edit"></i></a>
                 ';
@@ -114,12 +113,12 @@ class TmtahunController extends Controller
 
             return response()->json([
                 'status' => 1,
-                'msg' => 'data berhasil dtambah'
+                'msg' => 'data berhasil dtambah',
             ]);
-        } catch (\tmtahun $t) {
+        } catch (tmtahun $t) {
             return response()->json([
                 'status' => 1,
-                'msg' =>  $t,
+                'msg' => $t,
             ]);
         }
     }
@@ -147,13 +146,13 @@ class TmtahunController extends Controller
         if (!$this->request->ajax()) {
             return response()->json([
                 'data' => 'data null',
-                'aspx' => 'response aspx fail '
+                'aspx' => 'response aspx fail ',
             ]);
         }
         $data = tmtahun::find($id);
         $kode = $data->kode;
-        $tahun  = $data->tahun;
-        $active  =  $data->active;
+        $tahun = $data->tahun;
+        $active = $data->active;
         $id = $data->id;
 
         $title = 'Edit data master tahun';
@@ -189,12 +188,12 @@ class TmtahunController extends Controller
 
             return response()->json([
                 'status' => 1,
-                'msg' => 'data berhasil simpan'
+                'msg' => 'data berhasil simpan',
             ]);
-        } catch (\Tmlevel $t) {
+        } catch (tmtahun $t) {
             return response()->json([
                 'status' => 1,
-                'msg' =>  $t,
+                'msg' => $t,
             ]);
         }
     }
@@ -208,18 +207,20 @@ class TmtahunController extends Controller
     public function destroy()
     {
         try {
-            if (is_array($this->request->id))
+            if (is_array($this->request->id)) {
                 tmtahun::whereIn('id', $this->request->id)->delete();
-            else
+            } else {
                 tmtahun::whereid($this->request->id)->delete();
+            }
+
             return response()->json([
                 'status' => 1,
-                'msg' => 'Data berhasil di hapus'
+                'msg' => 'Data berhasil di hapus',
             ]);
         } catch (tmtahun $t) {
             return response()->json([
                 'status' => 2,
-                'msg' => $t
+                'msg' => $t,
             ]);
         }
     }

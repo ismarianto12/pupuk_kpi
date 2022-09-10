@@ -6,22 +6,24 @@
  <div class="ket"></div>
  <form id="exampleValidation" method="POST" class="simpan needs-validation" novalidate="">
 
-
      <label class="control-label"> Nama Prospektif</label>
      *) required
+
      <input class="form-control" name='nama_prospektif' value="" required />
      <label class="control-label"> Kode </label>
      *) jika ada
      <input class="form-control" name='kode' value="" required />
+
+
+     <br />
      <label class="control-label"> Assing ke Unit : </label>
      *) required
-     <label class="control-label col-md-6"><b>Assign To :</b></label>
-     <hr />
+
 
      @foreach (Properti_app::getUnitkerja() as $units)
          <div class="checkbox-inline">
              <label class="checkbox checkbox-success">
-                 <input type="checkbox" name="units_kerja[]" value="{{ $units->id }}" required/>
+                 <input type="checkbox" name="tmlevel_id[]" value="{{ $units->id }}" required />
                  <span></span>{{ $units->level }}</label>
          </div>
      @endforeach
@@ -74,9 +76,8 @@
                      $('#panel_tambah').removeClass('offcanvas-on');
                      $('#overlay').removeClass('offcanvas-overlay');
                      $('#formmodal').modal('hide');
-
+                     closetoast();
                      toastr.success('Data prospektif berhasil di simpan');
-
 
                  },
                  error: function(data) {
@@ -90,10 +91,10 @@
                      $.each(respon.errors, function(index, value) {
                          err += "<li>" + value + "</li>";
                      });
-                     toastr.error('Silahkan cek inputan berikut :');
-
+                     swal.fire('error', respon, 'info');
+                     toastr.error(err);
                      $('.ket').html(
-                         "<div role='alert' class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><strong>Perahtian donk!</strong> " +
+                         "<div role='alert' class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><strong>mohon perbaiki kesalahan berikut : </strong> " +
                          respon.message + "<ol class='pl-3 m-0'>" + err + "</ol></div>");
 
                  }

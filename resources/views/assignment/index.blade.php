@@ -71,7 +71,7 @@
         </div>
 
         <div class="table-responsive">
-            <table id="datatable" class="display table table-bordered table-hover"  style="overflow:auto;width:120%">
+            <table id="datatable" class="display table table-bordered table-hover" style="overflow:auto;width:120%">
                 <thead>
                     <tr>
                         <th rowspan="2"><strong>KPI</strong></th>
@@ -90,7 +90,7 @@
 
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tb">
                 </tbody>
             </table>
         </div>
@@ -183,80 +183,95 @@
                 }
             ],
             createdRow: function(row, data, dataIndex) {
-                // Use empty value in the "Office" column
-                // as an indication that grouping with COLSPAN is needed
-                //  if (data.status === 'prospektiff') {
-                //                     $('td:eq(0)', row).attr('colspan', 5);
-                //                     $('td:eq(2)', row).css('display', 'none');
-                //                     $('td:eq(3)', row).css('display', 'none');
-                //                     $('td:eq(4)', row).css('display', 'none');
-                //                     $('td:eq(5)', row).css('display', 'none');
+                if (data.status === 'prospektiff') {
+                    $('td:eq(0)', row).attr('colspan', 6);
+                    $('td:eq(2)', row).css('display', 'none');
+                    $('td:eq(3)', row).css('display', 'none');
+                    $('td:eq(4)', row).css('display', 'none');
+                    $('td:eq(5)', row).css('display', 'none');
+                    $('td:eq(6)', row).css('display', 'none');
 
-                //                 } else if (data.status === 'subprospektiff') {
 
-                //                     $('td:eq(0)', row).attr('colspan', 5);
-                //                     $('td:eq(2)', row).css('display', 'none');
-                //                     $('td:eq(3)', row).css('display', 'none');
-                //                     $('td:eq(4)', row).css('display', 'none');
-                //                     $('td:eq(5)', row).css('display', 'none');
-                //                 }
+
+                } else if (data.status === 'subprospektiff') {
+
+                    $('td:eq(0)', row).attr('colspan', 6);
+                    $('td:eq(2)', row).css('display', 'none');
+                    $('td:eq(3)', row).css('display', 'none');
+                    $('td:eq(4)', row).css('display', 'none');
+                    $('td:eq(5)', row).css('display', 'none');
+                    $('td:eq(6)', row).css('display', 'none');
+
+                }
             }
         });
 
+        $('#datatable').on('click', '#create', function() {
+            event.preventDefault();
+            // var tr = $(this).closest('tr');
+            // var td = $(this).closest('td');
+            // var row = table.row(tr);
+            // var rowData = row.data();
 
+            // if (row.child.isShown()) {
+            //     row.child.hide();
+            //     tr.removeClass('shown');
 
-        $('#datatable').on('click', '#create', function(e) {
-            e.preventDefault();
-            $('#_xformmodal').modal('show');
-            $('.modal-dialog').css({
-                'min-width': '70%'
-            });
+            // } else {
+            //     // Open this row  
+            //     tr.append(
+            //         `<tr><td>Data Input : </td><td>Data Input : </td><td>Data Input : </td><td>Data Input : </td><td>Data Input : </td></tr>`
+            //     );
 
-            id = $(this).data('id');
-            status = $(this).data('status');
-            addUrl = '{{ route('kamus.assingment.create') }}?tmprospektif_id=' + id + '&status=' +
-                status;
-            $('#form_content').load(addUrl);
+            //     tr.addClass('shown');
+            // }
+            {{-- var tr = $(event.target).closest("tr");
+            var prevtr = tr.prev();
+            var name = prevtr.find("tr:first").text();
+            $('#tb').append(
+                `<tr><td>Data Input : </td><td>Data Input : </td><td>Data Input : </td><td>Data Input : </td><td>Data Input : </td></tr>`
+            ); 
+            console.log(name); --}}
         });
-
-
-        $('#datatable').on('click', '#delete', function(e) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'confirm',
-                text: 'Anda akan menghapus data ini ?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                    id = $(this).data('id');
-                    $.post("{{ route('kamus.assingment.destroy', ':id') }}", {
-                        '_method': 'DELETE',
-                        'id': id
-                    }, function(data) {
-
-                        toastr.success('data kamus berhasil di hapus');
-
-
-                        $('#datatable').DataTable().ajax.reload();
-                    }, "JSON").fail(function(data) {
-
-
-
-                    });
-                }
-
-            });
-        });
-        $('select').on('change', function() {
-            $('#datatable').DataTable().ajax.reload();
-        });
-
     });
+
+
+
+
+    $('#datatable').on('click', '#delete', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'confirm',
+            text: 'Anda akan menghapus data ini ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                id = $(this).data('id');
+                $.post("{{ route('kamus.assingment.destroy', ':id') }}", {
+                    '_method': 'DELETE',
+                    'id': id
+                }, function(data) {
+                    toastr.success('data kamus berhasil di hapus');
+
+                    $('#datatable').DataTable().ajax.reload();
+                }, "JSON").fail(function(data) {
+
+                });
+            }
+
+        });
+    });
+
+    $('select').on('change', function() {
+        $('#datatable').DataTable().ajax.reload();
+    });
+
+
 
     @include('layouts.tablechecked');
 
@@ -287,21 +302,8 @@
                 respon = data.responseJSON;
                 $.each(respon.errors, function(index, value) {
                     err += "<li>" + value + "</li>";
-                });
-
-                $.notify({
-                    icon: 'flaticon-alarm-1',
-                    title: 'Akses tidak bisa',
-                    message: err,
-                }, {
-                    type: 'secondary',
-                    placement: {
-                        from: "top",
-                        align: "right"
-                    },
-                    time: 3000,
-                    z_index: 2000
-                });
+                }); 
+                $('#ket').html(`<div class="alert alert-danger">${ket}</div>`);
             });
         }
     }

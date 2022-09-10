@@ -7,6 +7,17 @@
     <div class="ket"></div>
     <div class="card-body">
         <form id="exampleValidation" method="POST" class="simpan needs-validation" novalidate="">
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label class="control-label col-md-6">Parent Kamus KPI</label>
+                    <select class="form-control" name="tmkamus_kpi_id" id="tmkamus_kpi_id">
+                        @foreach ($tmkamus_kpi as $tmkamus_kpis)
+                            <option value="{{ $tmkamus_kpis->id }}">{{ $tmkamus_kpis->nama_kpi }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="form-group row">
 
                 <div class="col-md-6">
@@ -187,11 +198,16 @@
                 toastr.error('silahkan cek kembali field yang kosong');
 
             } else {
+                for (instance in CKEDITOR.instances) {
+                    CKEDITOR.instances.editor.updateElement();
+                    CKEDITOR.instances.editor1.updateElement();
+                    CKEDITOR.instances.editor2.updateElement();
+                };
                 $('.card-body').css({
                     'opacity': '0.2'
                 });
                 $.ajax({
-                    url: "{{ route('master.kamus.update', $id) }}",
+                    url: "{{ route('master.kamus_sub.update', $id) }}",
                     method: "PUT",
                     data: $(this).serialize(),
                     chace: false,
@@ -202,7 +218,7 @@
                         toastr.success('data berhasil di update ');
                     },
                     error: function(data) {
-                        var div = $('#container');
+                        var div = $('.container');
                         setInterval(function() {
                             var pos = div.scrollTop();
                             div.scrollTop(pos + 2);

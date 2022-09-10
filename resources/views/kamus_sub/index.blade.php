@@ -1,7 +1,16 @@
 @extends('layouts.template')
-@section('title', 'Master Data Kamus')
+@section('title', 'Master Data Sub Kamus')
+
+
+
 
 @section('content')
+
+    <style>
+        .fa-list:before {
+            color: #ffff;
+        }
+    </style>
 
     <div class="modal fade" id="formmodal" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -30,9 +39,6 @@
     ])
 @endsection
 
-
-
-
 <div class="card card-custom gutter-b">
 
     <div class="card-body">
@@ -59,6 +65,21 @@
                         @foreach (Properti_app::getTahunActive() as $tahuns)
                             <option value="{{ $tahuns->id }}">
                                 {{ $tahuns->tahun }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="control-label col-md-3">
+                    Parent Kamus</label>
+                <br />
+                <div class="col-md-4">
+                    <select class="form-control" name="tmkamus_kpi" id="tmkamus_kpi">
+                         <option value="">--Kamus--</option>
+                        @foreach ($kamus as $kamuss)
+                            <option value="{{ $kamuss->id }}">
+                                {{ $kamuss->nama_kpi }}
                             </option>
                         @endforeach
                     </select>
@@ -104,6 +125,8 @@
                 _token: "{{ csrf_token() }}",
                 data: function(data) {
                     data.tmtahun_id = $('#tmtahun_id').val();
+                    data.tmkamus_kpi = $('#tmkamus_kpi').val();
+
                 },
                 _token: "{{ csrf_token() }}",
             },
@@ -170,7 +193,7 @@
                 startRender: function(rows, group) {
                     return $('<tr/>')
                         .append(
-                            '<td colspan="10" style="background:#ddd;text-align:center;height: 14px;">' +
+                            '<td colspan="10" style="background: #45d942; text-align: center; height: 14px; color: #fff;"><i class="fa fa-list"></i> ' +
                             group + '</td>')
 
                 },

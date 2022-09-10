@@ -2898,11 +2898,10 @@ pre code {
 .form-control {
   display: block;
   width: 100%;
-  height: calc(1.5em + 1.3rem + 2px);
-  padding: 0.65rem 1rem;
+  height: calc(1.4em + 1rem + 1px);
+  padding: 0.45rem 1rem;
   font-size: 1rem;
   font-weight: 400;
-  line-height: 1.5;
   color: #3F4254;
   background-color: #ffffff;
   background-clip: padding-box;
@@ -99425,6 +99424,26 @@ div.dataTables_wrapper {
   width: 100% !important;
 }
 
-.button-group{
+.button-group {
   display: inherit;
 }
+
+.no-scroll {
+  overflow-y: hidden;
+}
+
+
+label {
+  font-weight: bold;
+
+}
+.modal-body {
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+
+.offcanvas-content{
+  max-height: calc(200vh - 210px);
+  overflow-y: auto;
+}
+

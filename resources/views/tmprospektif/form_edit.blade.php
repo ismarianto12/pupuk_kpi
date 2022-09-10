@@ -1,6 +1,6 @@
  <div class="card-title align-items-start flex-column">
-     <h3 class="card-label font-weight-bolder text-dark">Tambah data Sub prospektif</h3>
-     <span class="text-muted font-weight-bold font-size-sm mt-1">Craeate form</span>
+     <h3 class="card-label font-weight-bolder text-dark">Edit data prospektif</h3>
+     <span class="text-muted font-weight-bold font-size-sm mt-1">Edit form</span>
  </div>
 
  <div class="ket"></div>
@@ -11,37 +11,32 @@
      *) required
 
      <input class="form-control" name='nama_prospektif' value="{{ $nama_prospektif }}" />
+
+
+     <br />
      <label class="control-label"> Kode </label>
-     <br /><br /><br /><br />
-
-     *) jika ada
-
      <input class="form-control" name='kode' value="{{ $kode }}" />
+
+     <br />
      <label class="control-label"> Assing ke Unit : </label>
-     *) required
-     <br /><br /><br /><br />
      @foreach (Properti_app::getUnitkerja() as $units)
+         @php
+             $checked = strpos($tmlevel_id, $units->id) !== false ? 'checked' : '';
+         @endphp
          <div class="checkbox-inline">
              <label class="checkbox checkbox-success">
-                 <input type="checkbox" name="units_kerja[]" value="{{ $units->id }}" />
+                 <input type="checkbox" name="tmlevel_id[]" value="{{ $units->id }}" {{ $checked }} />
                  <span></span>{{ $units->level }}</label>
          </div>
      @endforeach
+     <br />
 
-     <br /><br /><br /><br />
-
-
-     <label class="control-label"> Parent </label>
-
-     *) required
-     <input class="form-control" name='parent_id' />
      <label class="control-label"> Tahun KPI</label>
      *) required
-     <br /><br /><br /><br />
 
      <select class="form-control" name="tmtahun_id" class="form-control">
-         @foreach (Properti_app::getActiveYear() as $tahunns)
-             <option value={{ $tahuns->id }}>{{ $tahuns->tahhun }}</option>
+         @foreach (Properti_app::getActiveYear() as $tahuns)
+             <option value={{ $tahuns->id }}>{{ $tahuns->tahun }}</option>
          @endforeach
      </select>
 
@@ -76,8 +71,8 @@
          $('.simpan').on('submit', function(e) {
              e.preventDefault();
              $.ajax({
-                 url: "{{ route('master.prospektif.store') }}",
-                 method: "POST",
+                 url: "{{ route('master.prospektif.update',$id) }}",
+                 method: "PUT",
                  data: $(this).serialize(),
                  chace: false,
                  async: false,
@@ -106,7 +101,7 @@
                      toastr.error('Silahkan cek inputan berikut :');
 
                      $('.ket').html(
-                         "<div role='alert' class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><strong>Perahtian donk!</strong> " +
+                         "<div role='alert' class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><strong>mohon perbaiki kesalahan berikut : </strong> " +
                          respon.message + "<ol class='pl-3 m-0'>" + err + "</ol></div>");
 
                  }

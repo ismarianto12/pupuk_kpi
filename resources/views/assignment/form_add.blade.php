@@ -22,16 +22,21 @@
                  </select>
              </div>
              <div class="form-group row">
-                 <label class="form-label">Sub</label>
-                 <input type="text" name="sub" class="form-control" />
-             </div>
-             <div class="form-group row">
-                 <label class="form-label">KPI</label>
-                 <input type="text" name="kpi" class="form-control" />
-             </div>
-             <div class="form-group row">
-                 <label class="form-label">Total</label>
-                 <input type="text" name="total" class="form-control" />
+
+                 <div class="col-md-3">
+                     <label class="form-label">Sub</label>
+                     <input type="text" name="sub" class="form-control" />
+                 </div>
+
+                 <div class="col-md-3">
+                     <label class="form-label">KPI</label>
+                     <input type="text" name="kpi" class="form-control" />
+                 </div>
+                 <div class="col-md-3">
+                     <label class="form-label">Total</label>
+
+                     <input type="text" name="total" class="form-control" />
+                 </div>
              </div>
 
              <div class="card-footer">
@@ -114,7 +119,7 @@
 
                      },
                      error: function(data) {
-                         var div = $('#container');
+                         var div = $('.container');
                          setInterval(function() {
                              var pos = div.scrollTop();
                              div.scrollTop(pos + 2);

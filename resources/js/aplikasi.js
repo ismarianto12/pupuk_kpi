@@ -1,4 +1,12 @@
- 
+
+function closetoast() {
+    $('#panel_tambah').removeClass('offcanvas-on');
+    $('#overlay').removeClass('offcanvas-overlay');
+    $('#formmodal').modal('hide');
+}
+
+
+
 function confirm_del(event) {
     console.log(event);
 
@@ -16,3 +24,6 @@ function confirm_del(event) {
         }
     })
 }
+
+
+

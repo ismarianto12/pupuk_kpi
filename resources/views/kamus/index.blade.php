@@ -2,24 +2,24 @@
 @section('title', 'Master Data Kamus')
 @section('content')
 
-    <div class="modal fade" id="formmodal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="title">
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="form_content">
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
+<div class="modal fade" id="formmodal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="title">
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="form_content">
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 @section('toolbars')
     @include('layouts.toolbars', [
         'url' => Url('kamus/create'),

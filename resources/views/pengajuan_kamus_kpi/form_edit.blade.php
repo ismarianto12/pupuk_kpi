@@ -222,7 +222,7 @@
                         Swal.exit();
                     },
                     error: function(data) {
-                        var div = $('#container');
+                        var div = $('.container');
                         setInterval(function() {
                             var pos = div.scrollTop();
                             div.scrollTop(pos + 2);

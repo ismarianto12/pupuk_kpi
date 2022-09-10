@@ -2,6 +2,7 @@
 use App\Http\Controllers\Assignmentcontroller;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JenisSuratController;
+use App\Http\Controllers\ListasigmentController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RealisasiKpiController;
 use App\Http\Controllers\ReportRealisasikpi;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Tmsurat_masterController;
 use App\Http\Controllers\TmtahunController;
 use App\Http\Controllers\TmunitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HistoryappController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use PHPJasper\PHPJasper;
@@ -43,8 +45,13 @@ Route::group(['middleware' => ['auth', 'delbastam', 'api']], function () {
     });
     Route::prefix('kamus')->name('kamus.')->group(function () {
         Route::resource('assingment', Assignmentcontroller::class);
-        // Route::get('load_unit/{id}', [Assignmentcontroller::class, 'load_unit'])->name('load_unit');
-        // Route::post('save_assingment', [Assignmentcontroller::class, 'save_assingment'])->name('save_assingment');
+        Route::get('get_list', [TmkamusKpiController::class, 'get_list'])->name('get_list');
+        Route::get('kamus_request_ajax', [TmkamusKpiController::class, 'kamus_request_ajax'])->name('kamus_request_ajax');
+        Route::get('kamus_request_ajax_sub', [TmkamusKpiController::class, 'kamus_request_ajax_sub'])->name('kamus_request_ajax_sub');
+
+    });
+    Route::prefix('kamus_sub')->name('kamus_sub.')->group(function () {
+        Route::post('request_ajax', [TmkamusKpiSubController::class, 'request_ajax'])->name('request_ajax');
 
     });
     Route::prefix('master')->name('master.')->group(function () {
@@ -104,6 +111,10 @@ Route::group(['middleware' => ['auth', 'delbastam', 'api']], function () {
         Route::post('assignto_save', [TmpengajuanKamusKpiController::class, 'assignto_save'])->name('assignto_save');
         Route::post('simpan_data_kpi', [RealisasiKpiController::class, 'simpan_data_kpi'])->name('simpan_data_kpi');
     });
+    Route::prefix('assignmen')->name('assignmen.')->group(function () {
+        Route::get('show/{unit_id}/{tahun_id}', [ReportRealisasikpi::class, 'show'])->name('show');
+    });
+
     Route::prefix('report')->name('report.')->group(function () {
         Route::get('report_realisasi/{type}', [ReportRealisasikpi::class, 'report_realisasi'])->name('report_realisasi');
     });
@@ -128,6 +139,7 @@ Route::group(['middleware' => ['auth', 'delbastam', 'api']], function () {
         Route::post('tmistilah_kpi', [TmistilahKpiController::class, 'api'])->name('tmistilah_kpi');
         Route::post('pengajuan_kamus_kpi', [TmpengajuanKamusKpiController::class, 'api'])->name('pengajuan_kamus_kpi');
         Route::post('realiasi_kpi', [RealisasiKpiController::class, 'api'])->name('realiasi_kpi');
+        Route::post('list_assigment', [ListasigmentController::class, 'api'])->name('list_assigment');
 
     });
     Route::prefix('kamus_api')->name('kamus_api.')->group(function () {
@@ -143,7 +155,25 @@ Route::group(['middleware' => ['auth', 'delbastam', 'api']], function () {
         Route::get('parameter_table', [Assignmentcontroller::class, 'parameter_table'])->name('parameter_table');
         Route::get('test_table', [Assignmentcontroller::class, 'test_table'])->name('test_table');
 
+        Route::resource('list_assigment', ListasigmentController::class);
+        Route::get('list_assigment_print/{id}', [ListasigmentController::class, 'print'])->name('list_assigment_print');
+        Route::get('getdatakamus_list_assigment', [ListasigmentController::class, 'getdatakamus_list_assigment'])->name('getdatakamus_list_assigment');
+
     });
+
+    Route::prefix('history')->name('history.')->group(function () {
+        Route::get('assigment', [HistoryappController::class, 'assigment'])->name('assigment');
+        Route::get('peganjuan_kamus', [HistoryappController::class, 'peganjuan_kamus'])->name('peganjuan_kamus');
+        Route::get('chat', [HistoryappController::class, 'chat'])->name('chat'); 
+    });
+    Route::prefix('history_api')->name('history_api.')->group(function () {
+       Route::get('assigment', [HistoryappController::class, 'assigment_api'])->name('assigment');
+       Route::get('peganjuan_kamus', [HistoryappController::class, 'assigment_api'])->name('peganjuan_kamus');
+       Route::get('chat', [HistoryappController::class, 'assigment_api'])->name('chat'); 
+   });
+
+   
+    
     Route::post('jenis_show/{id}', [SuratController::class, 'carijenis'])->name('jenis_show');
     Route::prefix('dashboard_api')->name('dashboard_api.')->group(function () {
         Route::get('site_jabodetabek', [HomeController::class, 'site_jabodetabek'])->name('site_jabodetabek');

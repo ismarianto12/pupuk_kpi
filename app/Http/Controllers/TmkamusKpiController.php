@@ -6,6 +6,7 @@ use App\Helpers\Properti_app;
 use App\Models\tmfrekuensi;
 use App\Models\tmjenis_pengukuran;
 use App\Models\tmkamus_kpi;
+use App\Models\tmkamus_kpi_sub;
 use App\Models\tmpolaritas;
 use App\Models\tmsatuan;
 use App\Models\tmtahun;
@@ -65,10 +66,39 @@ class TmkamusKpiController extends Controller
         ));
     }
 
-    public function getbangunan()
+    public function get_list()
     {
-        $title = 'kamus Akses User';
-        return view($this->view . 'select', compact('title'));
+        $data = tmkamus_kpi::select(
+            'tmkamus_kpi.id as idnya',
+            'tmkamus_kpi.nama_kpi',
+            'tmkamus_kpi.definisi',
+            'tmkamus_kpi.tujuan',
+            'tmkamus_kpi.tmsatuan_id',
+            'tmkamus_kpi.formula_penilaian',
+            'tmkamus_kpi.target',
+            'tmkamus_kpi.tmfrekuensi_id',
+            'tmkamus_kpi.tmpolaritas_id',
+            'tmkamus_kpi.unit_pemilik_kpi',
+            'tmkamus_kpi.unit_pengelola_kpi',
+            'tmkamus_kpi.sumber_data',
+            'tmkamus_kpi.jenis_pengukuran',
+            'tmfrekuensi.nama_frekuensi',
+            'tmfrekuensi.kode',
+            'tmpolaritas.kode',
+            'tmpolaritas.nama_polaritas',
+            'tmsatuan.kode',
+            'tmsatuan.nama_satuan',
+            'tmtahun.tahun',
+            'tmkamus_kpi.created_at',
+            'tmkamus_kpi.updated_at',
+            'tmunit.nama as nama_unit'
+        )->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id')
+            ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
+            ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
+            ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
+            ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id', 'left')->get();
+        return response()->json($data);
+
     }
 
     public function api()
@@ -106,8 +136,8 @@ class TmkamusKpiController extends Controller
         if ($this->request->tmtahun_id) {
             $data->where('tmkamus_kpi.tmtahun_id', $this->request->tmtahun_id);
         }
-        $data->get();
-        return DataTables::of($data)
+        $rdata = $data->get();
+        return DataTables::of($rdata)
             ->editColumn('id', function ($p) {
                 return "<input type='checkbox' name='cbox[]' value='" . $p->idnya . "' />";
             })
@@ -165,7 +195,7 @@ class TmkamusKpiController extends Controller
                 'status' => 1,
                 'msg' => 'data berhasil dtambah',
             ]);
-        } catch (\Tmkamus $t) {
+        } catch (tmkamus_kpi $t) {
             return response()->json([
                 'status' => 1,
                 'msg' => $t,
@@ -338,6 +368,114 @@ class TmkamusKpiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    public function kamus_request_ajax()
+    {
+        if ($this->request->ajax()) {
+
+            try {
+
+                $id = $this->request->id;
+                $data = tmkamus_kpi::select(
+                    'tmkamus_kpi.id as idnya',
+                    'tmkamus_kpi.nama_kpi',
+                    'tmkamus_kpi.definisi',
+                    'tmkamus_kpi.tujuan',
+                    'tmkamus_kpi.tmsatuan_id',
+                    'tmkamus_kpi.formula_penilaian',
+                    'tmkamus_kpi.target',
+                    'tmkamus_kpi.tmfrekuensi_id',
+                    'tmkamus_kpi.tmpolaritas_id',
+                    'tmkamus_kpi.unit_pemilik_kpi',
+                    'tmkamus_kpi.unit_pengelola_kpi',
+                    'tmkamus_kpi.sumber_data',
+                    'tmkamus_kpi.jenis_pengukuran',
+                    'tmkamus_kpi.catatan',
+                    'tmfrekuensi.nama_frekuensi',
+                    'tmfrekuensi.kode',
+                    'tmpolaritas.kode',
+                    'tmpolaritas.nama_polaritas',
+                    'tmsatuan.kode',
+                    'tmsatuan.nama_satuan',
+                    'tmtahun.tahun',
+                    'tmkamus_kpi.created_at',
+                    'tmkamus_kpi.updated_at',
+                    'tmunit.nama as nama_unit',
+                    'tmkamus_kpi_sub.id as tmkamus_sub_id',
+                    \DB::raw('(SELECT GROUP_CONCAT(tmjenis_pengukuran.jenis_pengukuran) from tmjenis_pengukuran where FIND_IN_SET(tmjenis_pengukuran.id,tmkamus_kpi.jenis_pengukuran) > 0) as pengukuran_ll')
+                )
+                    ->join('tmkamus_kpi_sub', 'tmkamus_kpi_sub.tmkamus_kpi_id', '=', 'tmkamus_kpi.id', 'left')
+                    ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id', 'left')
+                    ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
+                    ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
+                    ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
+                    ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id', 'left')
+
+                    ->find($id);
+
+                return response()->json($data);
+
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'data' => $th->getMessage(),
+                ]);
+            }
+
+        }
+    }
+    public function kamus_request_ajax_sub()
+    {
+        if ($this->request->ajax()) {
+            try {
+                $id = $this->request->tmkamus_sub_id;
+                $data = tmkamus_kpi_sub::select(
+                    'tmkamus_kpi_sub.id',
+                    'tmkamus_kpi_sub.nama_kpi_sub',
+                    'tmkamus_kpi_sub.definisi',
+                    'tmkamus_kpi_sub.tujuan',
+                    'tmkamus_kpi_sub.tmsatuan_id',
+                    'tmkamus_kpi_sub.formula_penilaian',
+                    'tmkamus_kpi_sub.target',
+                    'tmkamus_kpi_sub.tmfrekuensi_id',
+                    'tmkamus_kpi_sub.tmpolaritas_id',
+                    'tmkamus_kpi_sub.unit_pemilik_kpi',
+                    'tmkamus_kpi_sub.unit_pengelola_kpi',
+                    'tmkamus_kpi_sub.sumber_data',
+                    'tmkamus_kpi_sub.jenis_pengukuran',
+                    'tmkamus_kpi_sub.catatan',
+                    'tmkamus_kpi_sub.tmkamus_kpi_id',
+                    'tmfrekuensi.nama_frekuensi',
+                    'tmfrekuensi.kode',
+                    'tmpolaritas.kode',
+                    'tmpolaritas.nama_polaritas',
+                    'tmsatuan.kode',
+                    'tmsatuan.nama_satuan',
+                    'tmtahun.tahun',
+                    'tmkamus_kpi_sub.created_at',
+                    'tmkamus_kpi_sub.updated_at',
+                    'tmunit.nama as nama_unit',
+                    'tmkamus_kpi.id as id_parent_kamus',
+                    \DB::raw('(SELECT GROUP_CONCAT(tmjenis_pengukuran.jenis_pengukuran) from tmjenis_pengukuran where FIND_IN_SET(tmjenis_pengukuran.id,tmkamus_kpi.jenis_pengukuran) > 0) as pengukuran_ll')
+                )
+                    ->join('tmkamus_kpi', 'tmkamus_kpi.id', '=', 'tmkamus_kpi_sub.tmkamus_kpi_id', 'left')
+                    ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id', 'left')
+                    ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
+                    ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
+                    ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
+                    ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id', 'left')
+                    ->where('tmkamus_kpi_sub.id',$id)->get();
+
+                return response()->json($data);
+
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'data' => $th->getMessage(),
+                ]);
+            }
+
+        }
+    }
+
     public function update($id)
     {
         $this->request->validate([

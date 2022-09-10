@@ -31,10 +31,25 @@ class TmkamusKpiSubController extends Controller
     {
         $title = 'Master Kamus';
         $bidang = tmunit::get();
+        $kamus = tmkamus_kpi::get();
         return view(
             $this->view . 'index',
-            compact('title', 'bidang')
+            compact('title', 'bidang','kamus')
         );
+    }
+
+    public function request_ajax()
+    {
+        if ($this->request->ajax()) {
+            $tmkamus_kpi_id = $this->request->tmkamus_kpi_id;
+            $data = tmkamus_kpi_sub::where('tmkamus_id', $tmkamus_kpi_id)->get();
+            if ($data->count() > 0) {
+                $result = $data;
+            } else {
+                $result = $data;
+            }
+            return response()->json($result);
+        }
     }
 
     /**
@@ -53,8 +68,8 @@ class TmkamusKpiSubController extends Controller
         $polaritas = tmpolaritas::get();
         $unit_pengelola = tmunit::get();
         $jenis_pengukuran = tmjenis_pengukuran::get();
-        $tmkamus_kpi  = tmkamus_kpi::get();
-        
+        $tmkamus_kpi = tmkamus_kpi::get();
+
         $tahun = tmtahun::get();
         $title = 'kamus Akses User';
 
@@ -76,10 +91,11 @@ class TmkamusKpiSubController extends Controller
     }
     public function api()
     {
+        $tmkamus_kpi  = $this->request->tmkamus_kpi;
+
         $icn = new Properti_app;
         $data = tmkamus_kpi_sub::select(
             'tmkamus_kpi_sub.id as idnya',
-            'tmkamus_kpi_sub.tmprospektif_sub_id',
             'tmkamus_kpi_sub.nama_kpi_sub',
             'tmkamus_kpi_sub.definisi',
             'tmkamus_kpi_sub.tujuan',
@@ -97,7 +113,6 @@ class TmkamusKpiSubController extends Controller
             'tmkamus_kpi_sub.updated_at',
             'tmkamus_kpi_sub.nonactive',
             'tmkamus_kpi_sub.catatan',
-            'tmkamus_kpi_sub.id_parent',
             'tmkamus_kpi_sub.tmkamus_kpi_id',
             'tmkamus_kpi.nama_kpi',
             'tmfrekuensi.nama_frekuensi',
@@ -118,9 +133,11 @@ class TmkamusKpiSubController extends Controller
         if ($this->request->tmtahun_id) {
             $data->where('tmkamus_kpi_sub.tmtahun_id', $this->request->tmtahun_id);
         }
-        $data->get();
-
-        return DataTables::of($data)
+        if($tmkamus_kpi){
+            $data->where('tmkamus_kpi_sub.tmkamus_kpi_id',$tmkamus_kpi);
+        }
+        $sql = $data->get();
+        return DataTables::of($sql)
             ->editColumn('id', function ($p) {
                 return "<input type='checkbox' name='cbox[]' value='" . $p->idnya . "' />";
             })
@@ -148,7 +165,6 @@ class TmkamusKpiSubController extends Controller
 
         $icn = new Properti_app;
         $data = tmkamus_kpi_sub::select(
-            'tmkamus_kpi_sub.tmprospektif_sub_id',
             'tmkamus_kpi_sub.nama_kpi_sub',
             'tmkamus_kpi_sub.definisi',
             'tmkamus_kpi_sub.tujuan',
@@ -166,7 +182,6 @@ class TmkamusKpiSubController extends Controller
             'tmkamus_kpi_sub.updated_at',
             'tmkamus_kpi_sub.nonactive',
             'tmkamus_kpi_sub.catatan',
-            'tmkamus_kpi_sub.id_parent',
             'tmkamus_kpi_sub.tmkamus_kpi_id',
             'tmfrekuensi.nama_frekuensi',
             'tmfrekuensi.kode',
@@ -210,13 +225,14 @@ class TmkamusKpiSubController extends Controller
     public function store()
     {
         $this->request->validate([
-            'nama_kpi' => 'required',
+            'nama_kpi_sub' => 'required',
             'definisi' => 'required',
         ]);
         try {
-            $data = new tmkamus_kpi();
+            $data = new tmkamus_kpi_sub();
 
-            $data->nama_kpi = $this->request->nama_kpi;
+            $data->tmkamus_kpi_id = $this->request->tmkamus_kpi_id;
+            $data->nama_kpi_sub = $this->request->nama_kpi_sub;
             $data->definisi = $this->request->definisi;
             $data->tujuan = $this->request->tujuan;
             $data->tmsatuan_id = $this->request->tmsatuan_id;
@@ -228,9 +244,11 @@ class TmkamusKpiSubController extends Controller
             $data->unit_pengelola_kpi = $this->request->unit_pengelola_kpi;
             $data->sumber_data = $this->request->sumber_data;
             $data->tmtahun_id = $this->request->tmtahun_id;
-            $data->catatan = $this->request->catatan_kamus;
-
-            $data->jenis_pengukuran = implode(',', $this->request->jenis_pengukuran);
+            // created_at
+            // updated_at
+            // nonactive
+            $data->catatan = $this->request->catatan;
+            $data->jenis_pengukuran = isset($this->request->jenis_pengukuran) ? implode(',', $this->request->jenis_pengukuran) : '';
 
             $data->save();
             return response()->json([
@@ -275,6 +293,7 @@ class TmkamusKpiSubController extends Controller
             'tmkamus_kpi_sub.sumber_data',
             'tmkamus_kpi_sub.jenis_pengukuran',
             'tmkamus_kpi_sub.catatan',
+            'tmkamus_kpi.nama_kpi as parent_kpi_nama',
             'tmfrekuensi.nama_frekuensi',
             'tmfrekuensi.kode',
             'tmpolaritas.kode',
@@ -287,6 +306,7 @@ class TmkamusKpiSubController extends Controller
             'tmunit.nama as nama_unit',
             \DB::raw('(SELECT GROUP_CONCAT(tmjenis_pengukuran.jenis_pengukuran) from tmjenis_pengukuran where FIND_IN_SET(tmjenis_pengukuran.id,tmkamus_kpi_sub.jenis_pengukuran) > 0) as pengukuran_ll')
         )
+            ->join('tmkamus_kpi', 'tmkamus_kpi.id', 'tmkamus_kpi_sub.tmkamus_kpi_id', 'left')
             ->join('tmsatuan', 'tmkamus_kpi_sub.tmsatuan_id', '=', 'tmsatuan.id')
             ->join('tmfrekuensi', 'tmkamus_kpi_sub.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
             ->join('tmpolaritas', 'tmkamus_kpi_sub.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
@@ -294,16 +314,12 @@ class TmkamusKpiSubController extends Controller
             ->join('tmunit', 'tmkamus_kpi_sub.unit_pengelola_kpi', '=', 'tmunit.id', 'left')
             ->where('tmkamus_kpi_sub.id', $id)->firstOrFail();
 
-        // dd($data);
-
-        $id = $id;
-
-        $satuan = tmsatuan::get();
-        $frekuensi = tmfrekuensi::get();
-        $polaritas = tmpolaritas::get();
-        $unit_pengelola = tmunit::get();
-        $jenis_pengukuran = tmjenis_pengukuran::get();
-        $tahun = tmtahun::get();
+        // $satuan = tmsatuan::get();
+        // $frekuensi = tmfrekuensi::get();
+        // $polaritas = tmpolaritas::get();
+        // $unit_pengelola = tmunit::get();
+        // $jenis_pengukuran = tmjenis_pengukuran::get();
+        // $tahun = tmtahun::get();
 
         return view($this->view . 'form_show', [
             'id' => $id,
@@ -331,7 +347,7 @@ class TmkamusKpiSubController extends Controller
             'unit_pengelola' => $data->unit_pengelola,
             'polaritas' => $data->polaritas,
             'tahun' => $data->tahun,
-            // 'catatan' => $data->catatan,
+            'parent_kpi_nama' => $data->parent_kpi_nama,
             'nama_unit' => $data->nama_unit,
 
         ]);
@@ -376,11 +392,10 @@ class TmkamusKpiSubController extends Controller
         $unit_pengelola = tmunit::get();
         $jenis_pengukuran = tmjenis_pengukuran::get();
         $tahun = tmtahun::get();
-        
 
         return view($this->view . 'form_edit', [
             'id' => $id,
-            'tmkamus_kpi'=> tmkamus_kpi::get(), 
+            'tmkamus_kpi' => tmkamus_kpi::get(),
             'nama_kpi_sub' => $nama_kpi_sub,
             'definisi' => $definisi,
             'tujuan' => $tujuan,

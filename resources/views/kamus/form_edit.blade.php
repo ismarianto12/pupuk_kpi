@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title"><i class="fa fa-copy"></i>Edit Data Master Kamus</h3>
+        <h3 class="card-title"><i class="fa fa-copy"></i>Edit Data Master Sub Kamus</h3>
         <label class="control-label col-md-6"></label>
     </div>
 
@@ -200,6 +200,8 @@
 
         $('.simpan').on('submit', function(e) {
             e.preventDefault();
+
+
             if ($(this)[0].checkValidity() === false) {
 
                 e.stopPropagation();
@@ -209,6 +211,11 @@
                 $('.card-body').css({
                     'opacity': '0.2'
                 });
+                for (instance in CKEDITOR.instances) {
+                    CKEDITOR.instances.editor.updateElement();
+                    CKEDITOR.instances.editor1.updateElement();
+                    CKEDITOR.instances.editor2.updateElement();
+                };
                 $.ajax({
                     url: "{{ route('master.kamus.update', $id) }}",
                     method: "PUT",
@@ -221,7 +228,7 @@
                         toastr.success('data berhasil di update ');
                     },
                     error: function(data) {
-                        var div = $('#container');
+                        var div = $('.container');
                         setInterval(function() {
                             var pos = div.scrollTop();
                             div.scrollTop(pos + 2);

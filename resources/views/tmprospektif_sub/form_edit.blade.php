@@ -1,6 +1,6 @@
  <div class="card-title align-items-start flex-column">
-     <h3 class="card-label font-weight-bolder text-dark">Tambah data Sub prospektif</h3>
-     <span class="text-muted font-weight-bold font-size-sm mt-1">Craeate form</span>
+     <h3 class="card-label font-weight-bolder text-dark"><i class="fa fa-edit"></i>Edit data Sub prospektif</h3>
+     <span class="text-muted font-weight-bold font-size-sm mt-1">Edit form</span>
  </div>
 
  <div class="ket"></div>
@@ -8,39 +8,49 @@
 
      <form id="exampleValidation" method="POST" class="simpan needs-validation" novalidate="">
 
+         <label class="control-label"> Nama Prospektif</label>
+         <select class="form-control" name="tmprospektif_id" class="form-control">
+             @foreach ($prospektif as $prospektifs)
+                 <option value={{ $prospektifs->id }}>{{ $prospektifs->nama_prospektif }}</option>
+             @endforeach
+         </select>
+         <br />
+
          <label class="control-label"> Nama Sub Prospektif</label>
          *) required
 
          <input class="form-control" name='nama_prospektif_sub' value="{{ $nama_prospektif_sub }}" />
          <label class="control-label"> Sub Prospektif Kode </label>
          *)
-         <input class="form-control" name='kode' value="{{ $kode }}" />
+         <input class="form-control" name='kode_sub' value="{{ $kode_sub }}" />
          <label class="control-label"> Assing ke Unit : </label>
 
-         <br /><br /><br /><br />
+         <br />
          @foreach (Properti_app::getUnitkerja() as $units)
              @php
                  $checked = strpos($tmlevel_id, $units->id) !== false ? 'checked' : '';
              @endphp
              <div class="checkbox-inline">
                  <label class="checkbox checkbox-success">
-                     <input type="checkbox" name="units_kerja[]" value="{{ $units->id }}" />
+                     <input type="checkbox" name="tmlevel_id[]" value="{{ $units->id }}" {{ $checked }} />
                      <span></span>{{ $units->level }}</label>
              </div>
          @endforeach
-         <label class="control-label"> Tahun KPI</label>
+         <label class="control-label"> Tahun KPI</label> <br />
          *) require
          <select class="form-control" name="tmtahun_id" class="form-control">
              @foreach (Properti_app::getActiveYear() as $tahuns)
                  <option value={{ $tahuns->id }}>{{ $tahuns->tahun }}</option>
              @endforeach
          </select>
-
+         <br />
+         <label class="control-label"> Target Sub Prospektif </label><br />
+         <input class="form-control" name='target' value="{{ $target }}" />
          <div class="offcanvas-footer" kt-hidden-height="113" style="">
              <div class="text-right">
                  <br />
                  <button type="submit" class="btn btn-primary text-weight-bold">Save</button>
-                 <button type="reset" class="btn btn-danger text-weight-bold">Cancel</button>
+                 <button type="reset" class="btn btn-danger text-weight-bold" id="cancel">Cancel</button>
 
              </div>
          </div>
@@ -65,8 +75,16 @@
 
      })();
      $(function() {
+         $('#cancel').on('click', function() {
+             $('#panel_tambah').removeClass('offcanvas-on');
+             $('#overlay').removeClass('offcanvas-overlay');
+             $('#formmodal').modal('hide');
+
+         });
+
          $('.simpan').on('submit', function(e) {
              e.preventDefault();
+
              $.ajax({
                  url: "{{ route('master.prospektif_sub.update', $id) }}",
                  method: "PUT",
@@ -97,7 +115,7 @@
                      toastr.error('Silahkan cek inputan berikut :');
 
                      $('.ket').html(
-                         "<div role='alert' class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><strong>Perahtian donk!</strong> " +
+                         "<div role='alert' class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><strong>mohon perbaiki kesalahan berikut : </strong> " +
                          respon.message + "<ol class='pl-3 m-0'>" + err + "</ol></div>");
 
                  }

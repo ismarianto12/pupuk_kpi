@@ -23,7 +23,7 @@
                  <div class="col-md-6">
                      <label class="control-label col-md-6">Nama KPI</label>
 
-                     <input name="nama_kpi" class="form-control" id="definisi" required />
+                     <input name="nama_kpi_sub" class="form-control" id="nama_kpi" required />
                  </div>
              </div>
              <div class="form-group row">
@@ -167,7 +167,7 @@
          CKEDITOR.replace('editor2');
          $('#tmkamus_kpi_id').select2({
              placeholder: "Pilih Parent Kamus"
-         });  
+         });
          $('#unit_pengelola').select2({
              placeholder: "Select a state"
          });
@@ -196,8 +196,13 @@
                  $('.card-body').css({
                      'opacity': '0.2'
                  });
+                 for (instance in CKEDITOR.instances) {
+                     CKEDITOR.instances.editor.updateElement();
+                     CKEDITOR.instances.editor1.updateElement();
+                     CKEDITOR.instances.editor2.updateElement();
+                 };
                  $.ajax({
-                     url: "{{ route('master.kamus.store') }}",
+                     url: "{{ route('master.kamus_sub.store') }}",
                      method: "POST",
                      data: $(this).serialize(),
                      chace: false,
@@ -208,7 +213,7 @@
                          toastr.success('data kamus berhasil di simpan');
                      },
                      error: function(data) {
-                         var div = $('#container');
+                         var div = $('.container');
                          setInterval(function() {
                              var pos = div.scrollTop();
                              div.scrollTop(pos + 2);

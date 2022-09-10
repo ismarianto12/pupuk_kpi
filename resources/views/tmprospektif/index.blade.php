@@ -55,7 +55,7 @@
 <div id="panel_tambah" class="offcanvas offcanvas-right pt-5 pb-10" style="overflow:auto">
 
     <div class="offcanvas-content px-10">
-    
+
         <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_panel_close">
             <i class="ki ki-close icon-xs text-muted"></i>
         </a>
@@ -66,6 +66,8 @@
 
 <script>
     jQuery(document).ready(function() {
+        $.fn.dataTable.ext.errMode = 'none';
+
         var table = $('#datatable').DataTable({
             processing: true,
             serverSide: true,
@@ -110,7 +112,7 @@
                     name: 'updated_at',
                     render: function(data, type, row, meta) {
                         return moment.utc(data).local().format('DD-MM-YYYY HH:mm:ss');
-                    }       
+                    }
                 },
 
                 {
@@ -122,7 +124,8 @@
     });
 
     @include('layouts.tablechecked');
-     function del() {
+
+    function del() {
         var c = new Array();
         $("input:checked").each(function() {
             c.push($(this).val());

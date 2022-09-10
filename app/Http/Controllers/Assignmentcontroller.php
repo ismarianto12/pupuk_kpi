@@ -94,6 +94,8 @@ class Assignmentcontroller extends Controller
 
     public function api()
     {
+        ini_set('memory_limit', '-1');
+
         $prospektif = tmprospektif::get();
         $idx = 0;
         foreach ($prospektif as $prospektiff) {
@@ -113,11 +115,42 @@ class Assignmentcontroller extends Controller
             data-id="' . $prospektiff->id . '"
             data-status="prospektiff"><i class="fa fa-plus"></i></a>';
 
-            $fkamus = tmtable_assigment::join('tmkamus_kpi', 'tmkamus_kpi.id', '=', 'tmtable_assigment.tmkamus_kpi_id')
-                ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id')
-                ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id')
-                ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id')
-                ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id')
+            $fkamus = tmtable_assigment::select(
+
+                'tmkamus_kpi.id',
+                'tmkamus_kpi.nama_kpi',
+                'tmkamus_kpi.definisi',
+                'tmkamus_kpi.tujuan',
+                'tmkamus_kpi.tmsatuan_id',
+                'tmkamus_kpi.formula_penilaian',
+                'tmkamus_kpi.target',
+                'tmkamus_kpi.tmfrekuensi_id',
+                'tmkamus_kpi.tmpolaritas_id',
+                'tmkamus_kpi.unit_pemilik_kpi',
+                'tmkamus_kpi.unit_pengelola_kpi',
+                'tmkamus_kpi.sumber_data',
+                'tmkamus_kpi.jenis_pengukuran',
+                'tmkamus_kpi.catatan',
+                'tmfrekuensi.nama_frekuensi',
+                'tmfrekuensi.kode',
+                'tmpolaritas.kode',
+                'tmpolaritas.nama_polaritas',
+                'tmsatuan.kode',
+                'tmsatuan.nama_satuan',
+                'tmtahun.tahun',
+                'tmkamus_kpi.created_at',
+                'tmkamus_kpi.updated_at',
+                'tmunit.nama as nama_unit',
+                \DB::raw('(SELECT GROUP_CONCAT(tmjenis_pengukuran.jenis_pengukuran) from tmjenis_pengukuran where FIND_IN_SET(tmjenis_pengukuran.id,tmkamus_kpi.jenis_pengukuran) > 0) as pengukuran_ll'),
+                'tmtable_assigment.sub',
+                'tmtable_assigment.kpi',
+                'tmtable_assigment.total'
+            )->join('tmkamus_kpi', 'tmkamus_kpi.id', '=', 'tmtable_assigment.tmkamus_kpi_id')
+
+                ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id', 'left')
+                ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
+                ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
+                ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
                 ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id')->where('tmtable_assigment.tmprospektif_id', $prospektiff->id)->get();
             $idx++;
 
@@ -166,12 +199,41 @@ class Assignmentcontroller extends Controller
                 $c++;
                 $idx++;
 
-                $kamus = tmtable_assigment::join('tmkamus_kpi', 'tmkamus_kpi.id', '=', 'tmtable_assigment.tmkamus_kpi_id')
-                    ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id')
-                    ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id')
-                    ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id')
-                    ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id')
-                    ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id')
+                $kamus = tmtable_assigment::select(
+                    'tmkamus_kpi.id',
+                    'tmkamus_kpi.nama_kpi',
+                    'tmkamus_kpi.definisi',
+                    'tmkamus_kpi.tujuan',
+                    'tmkamus_kpi.tmsatuan_id',
+                    'tmkamus_kpi.formula_penilaian',
+                    'tmkamus_kpi.target',
+                    'tmkamus_kpi.tmfrekuensi_id',
+                    'tmkamus_kpi.tmpolaritas_id',
+                    'tmkamus_kpi.unit_pemilik_kpi',
+                    'tmkamus_kpi.unit_pengelola_kpi',
+                    'tmkamus_kpi.sumber_data',
+                    'tmkamus_kpi.jenis_pengukuran',
+                    'tmkamus_kpi.catatan',
+                    'tmfrekuensi.nama_frekuensi',
+                    'tmfrekuensi.kode',
+                    'tmpolaritas.kode',
+                    'tmpolaritas.nama_polaritas',
+                    'tmsatuan.kode',
+                    'tmsatuan.nama_satuan',
+                    'tmtahun.tahun',
+                    'tmkamus_kpi.created_at',
+                    'tmkamus_kpi.updated_at',
+                    'tmunit.nama as nama_unit',
+                    \DB::raw('(SELECT GROUP_CONCAT(tmjenis_pengukuran.jenis_pengukuran) from tmjenis_pengukuran where FIND_IN_SET(tmjenis_pengukuran.id,tmkamus_kpi.jenis_pengukuran) > 0) as pengukuran_ll'),
+                    'tmtable_assigment.sub',
+                    'tmtable_assigment.kpi',
+                    'tmtable_assigment.total'
+                )->join('tmkamus_kpi', 'tmkamus_kpi.id', '=', 'tmtable_assigment.tmkamus_kpi_id')
+                    ->join('tmsatuan', 'tmkamus_kpi.tmsatuan_id', '=', 'tmsatuan.id', 'left')
+                    ->join('tmfrekuensi', 'tmkamus_kpi.tmfrekuensi_id', '=', 'tmfrekuensi.id', 'left')
+                    ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
+                    ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
+                    ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id', 'left')
                     ->where('tmtable_assigment.tmprospektif_sub_id', $tmprospektif_subs->id)->get();
                 $d = 1;
                 foreach ($kamus as $kamuss) {
@@ -196,13 +258,12 @@ class Assignmentcontroller extends Controller
                     $d = 1;
 
                 }
-
                 $idx++;
             }
-
             $idx++;
         }
-        $result = array_merge($dataset);
+        $setDataSet = isset($dataset) ? $dataset : [];
+        $result = array_merge($setDataSet);
         return response()->json(['data' => $result]);
     }
 
