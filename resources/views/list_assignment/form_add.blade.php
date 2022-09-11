@@ -10,6 +10,13 @@
         'ajax_button' => null,
     ])
 @endsection
+<style>
+ table td, table td * {
+    vertical-align: top;
+ }
+
+</style>
+
 <div class="modal fade" id="_xformmodal" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -37,18 +44,18 @@
         <h4><i class="fa fa-users"></i>Tambah data Assigment Kamus </h4>
         <div class="table-responsive">
             <form action="" method="GET" id="formdata">
-                <table class="display table table-bordered table-hover" style="width: 100%; font-size: 12px;">
+                <table class="display table table-hover" style="width: 100%; font-size: 12px;">
                     <thead style="
     background: #55b16d;
     color: #fff;
     text-align: center;
 ">
                         <tr>
-                            <th rowspan="2"><strong>KPI</strong></th>
-                            <th rowspan="2"><strong>Satuan</strong></th>
-                            <th rowspan="2"><strong>Target</strong></th>
-                            <th rowspan="2"><strong>Polaritas</strong></th>
-                            <th colspan="4" class="text-center">
+                            <th rowspan="2" valign="top"><strong>KPI</strong></th>
+                            <th rowspan="2" valign="top"><strong>Satuan</strong></th>
+                            <th rowspan="2" valign="top"><strong>Target</strong></th>
+                            <th rowspan="2" valign="top"><strong>Polaritas</strong></th>
+                            <th colspan="4" class="text-center" valign="top">
                                 <b>Bobot</b>
                             </th>
                         </tr>
@@ -327,16 +334,16 @@
         });
 
 
-
-        function append_table(increment, tmprospektif_id, tmprospektif_sub_id) {
+        var increment = 1;
+        function append_table(table_no, tmprospektif_id, tmprospektif_sub_id) {
             event.preventDefault();
             //jika sub prospektif kosong maka akan tampil
-            jQuery('#table_body' + increment+'_'+tmprospektif_id+'_'+tmprospektif_sub_id).append(`     
+            jQuery('#table_body' + table_no+'_'+tmprospektif_id+'_'+tmprospektif_sub_id).append(`     
                 <tr id="tr_child_${increment}_${tmprospektif_id}_${tmprospektif_sub_id}"> 
                 <td>
                 <input type="hidden" name="tmprospektif_id[]" value="${tmprospektif_id}" />
                 <input type="hidden" name="tmprospektif_sub_id[]" value="${tmprospektif_sub_id}" /> 
-                <select id="kamus_parent_${increment}_${tmprospektif_id}_${tmprospektif_sub_id}" class="data_kpi_list form-control" name="tmkamus_kpi_id[]" onChange="javascript:cari_kamus($(this).val(),${tmprospektif_id},${tmprospektif_sub_id},${increment})" required> 
+                <select id="kamus_parent_${increment}_${tmprospektif_id}_${tmprospektif_sub_id}" class="data_kpi_list form-control" name="tmkamus_kpi_id[]" onChange="javascript:cari_kamus($(this).val(),${tmprospektif_id},${tmprospektif_sub_id},${increment},${table_no})" required> 
                   <option value="">Pilih Data Nama Kpi</option>   
                     @foreach ($tmkamus_kpi as $tmkamus_kpis)
                         <option value="{{ $tmkamus_kpis->id }}">{{ $tmkamus_kpis->nama_kpi }}</option>
@@ -354,8 +361,7 @@
                 </td>
                 </tr> 
             `);
-    
-            return false;
+            increment++; 
         }
 
         function remove_table(increment, tmprospektif_id, tmprospektif_sub_id) {
@@ -377,7 +383,7 @@
         }
 
          
-         function cari_kamus(kamus_id, tmprospektif_id, tmprospektif_sub_id,urutan) { 
+         function cari_kamus(kamus_id, tmprospektif_id, tmprospektif_sub_id,urutan,table_no) { 
  
             //$(`#tr_subchild_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).remove();  
              $.ajax({
@@ -391,6 +397,9 @@
                 dataType: 'json',
 
                 success: function(data) {  
+
+                    console.log(`#kamus_parent_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`);
+                    
                     $(`#kamus_parent_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).attr('disabled',true);
                     $(`#tmsatuanid_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).attr('disabled', true).val(data
                         .nama_satuan);
@@ -412,7 +421,7 @@
                             url: "{{ route('kamus.kamus_request_ajax_sub') }}",
                             method: "GET",
                             data: {
-                                tmkamus_sub_id: data.tmkamus_sub_id
+                                tmkamus_id: kamus_id
                             },
                             chace: false,
                             async: false,
@@ -423,23 +432,24 @@
                                 tmkamus_sub_id = data.tmkamus_sub_id; 
                                 $.each(data, function(index, value) {  
                                     dataappend += `<tr id="tr_subchild_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" style="background:#3699FF"> 
-                                        <td> 
-                                        <span class="btn btn-icon btn-light btn-hover-primary btn-sm">${index+1}</span>
+                                        <td style="background: #ffffff;color: #000;text-align: right;">  
                                         <input type="hidden" name="tmprospektif_id[]" value="0" />
                                         <input type="hidden" name="tmprospektif_sub_id[]" value="${tmkamus_sub_id}" /> 
-                                         ${value.nama_kpi_sub}
+                                       
+                                        &nbsp;&nbsp;&nbsp;<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/UtR_arrow.svg/554px-UtR_arrow.svg.png?20071214083927" class="image-responsive" style="height:20px"> &nbsp;&nbsp;&nbsp;${index+1}. ${value.nama_kpi_sub} 
+                                        
                                        </td>
 
-                                            <td><input class="form-control" id="tmsatuanid_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="tmsatuan_id[]" value="${value.nama_satuan}" readonly/></td>
-                                            <td><input class="form-control" id="target_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="target[]" value="${value.target}" readonly/></td>
-                                            <td><input class="form-control" id="polaritas_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="polaritas[]" value="${value.nama_polaritas}" readonly/></td>
-                                            <td><input class="form-control" id="sub_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="sub[]" value="0"/></td>
-                                            <td><input class="form-control" id="kpi_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="kpi[]" value="0"/></td>
-                                            <td><input class="form-control" id="total_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="total[]" value="0"/></td>
+                                            <td><input class="form-control" id="tmsatuanid_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="tmsatuan_id[]" value="${value.nama_satuan}" disabled/></td>
+                                            <td><input class="form-control" id="target_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="target[]" value="${value.target}" disabled></td>
+                                            <td><input class="form-control" id="polaritas_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="polaritas[]" value="${value.nama_polaritas}" disabled/></td>
+                                            <td><input class="form-control" id="sub_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="sub[]" value="0"/></td>
+                                            <td><input class="form-control" id="kpi_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="kpi[]" value="0"/></td>
+                                            <td><input class="form-control" id="total_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="total[]" value="0"/></td>
                                         <td></td>
                                     </tr>`  
                                 }); 
-                               $(`#table_body${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).append(dataappend); 
+                               $(`#table_body${table_no}_${tmprospektif_id}_${tmprospektif_sub_id}`).append(dataappend); 
 
                             
                             },

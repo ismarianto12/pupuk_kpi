@@ -427,7 +427,7 @@ class TmkamusKpiController extends Controller
     {
         if ($this->request->ajax()) {
             try {
-                $id = $this->request->tmkamus_sub_id;
+                $tmkamus_id = $this->request->tmkamus_id;
                 $data = tmkamus_kpi_sub::select(
                     'tmkamus_kpi_sub.id',
                     'tmkamus_kpi_sub.nama_kpi_sub',
@@ -463,7 +463,7 @@ class TmkamusKpiController extends Controller
                     ->join('tmpolaritas', 'tmkamus_kpi.tmsatuan_id', '=', 'tmpolaritas.id', 'left')
                     ->join('tmtahun', 'tmkamus_kpi.tmtahun_id', '=', 'tmtahun.id', 'left')
                     ->join('tmunit', 'tmkamus_kpi.unit_pengelola_kpi', '=', 'tmunit.id', 'left')
-                    ->where('tmkamus_kpi_sub.id',$id)->get();
+                    ->where('tmkamus_kpi_sub.tmkamus_kpi_id',$tmkamus_id)->get();
 
                 return response()->json($data);
 
