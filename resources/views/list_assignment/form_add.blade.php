@@ -14,7 +14,14 @@
  table td, table td * {
     vertical-align: top;
  }
-
+ .table:not(.table-bordered) thead th, .table:not(.table-bordered) thead td {
+    border: 0.1px solid #fff;
+}
+.form-group label {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #ffffff;
+}
 </style>
 
 <div class="modal fade" id="_xformmodal" role="dialog" aria-hidden="true">
@@ -43,18 +50,17 @@
     <div class="card-body">
         <h4><i class="fa fa-users"></i>Tambah data Assigment Kamus </h4>
         <div class="table-responsive">
-            <form action="" method="GET" id="formdata">
+            <form action="" method="GET" id="formdata" style="background: #8cbfc7;">
                 <table class="display table table-hover" style="width: 100%; font-size: 12px;">
                     <thead style="
     background: #55b16d;
     color: #fff;
-    text-align: center;
-">
+    text-align: center;">
                         <tr>
-                            <th rowspan="2" valign="top"><strong>KPI</strong></th>
-                            <th rowspan="2" valign="top"><strong>Satuan</strong></th>
-                            <th rowspan="2" valign="top"><strong>Target</strong></th>
-                            <th rowspan="2" valign="top"><strong>Polaritas</strong></th>
+                            <th rowspan="2" valign="top" style="vertical-align: inherit;"><strong>KPI</strong></th>
+                            <th rowspan="2" valign="top" style="vertical-align: inherit;"><strong>Satuan</strong></th>
+                            <th rowspan="2" valign="top" style="vertical-align: inherit;"><strong>Target</strong></th>
+                            <th rowspan="2" valign="top" style="vertical-align: inherit;"><strong>Polaritas</strong></th>
                             <th colspan="4" class="text-center" valign="top">
                                 <b>Bobot</b>
                             </th>
@@ -80,11 +86,11 @@
                         <tbody id="table_body{{ $j.'_'.$tmprospektif_id.'_'.$tmprospektif_sub_id }}">
                             <tr>
                                 @if ($renders['parent']['val'])
-                                    <td colspan="7">
+                                    <td colspan="7" style="vertical-align: inherit;background: #689474;text-align: center;color: #fff;">
                                         @php echo $renders['nama_kpi']['val'] @endphp
                                     </td>
 
-                                    <td>
+                                    <td style="background: #486451;text-align: center;width: 10px;">
 
                                         <a href="" class="btn btn-sm btn-clean btn-icon"
                                             title="Assignemn data as unit kerja"
@@ -103,7 +109,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td>
+                                   <td style="background: #486451;text-align: center;width: 10px;">
                                         <a href="" class="btn btn-sm btn-clean btn-icon"
                                             title="Assignemn data as unit kerja"
                                             onclick="javascript:append_table({{ $j }},{{ $tmprospektif_id }},{{ $tmprospektif_sub_id }})"><i
@@ -120,13 +126,13 @@
 
 
                 </table>
-
+                <div class="container">
                 <div class="form-group row">
                     <label class="control-label col-md-3">
                         Unit Kerja </label>
                     <br />
                     <div class="col-md-4">
-                        <select class="form-control" name="tmunit_id" id="unit_id" required>
+                        <select class="form-control" name="tmunit_id" id="tmunit_id" required>
                             <option value="">--Semua Bidang--</option>
                             @foreach ($unit as $units)
                                 <option value="{{ $units->id }}">
@@ -153,7 +159,7 @@
                     </div>
                 </div>
 
-                <br /><br /><br /><br />
+                <br /> 
 
                 <div class="button-group">
                     <button type="submit" class="btn btn-info btn-md">
@@ -166,10 +172,13 @@
                     </button>
                 </div>
 
+            </div>
+            <br /><br /><br />
+
             </form>
             <br /><br /><br /><br />
+         </div>
         </div>
-    </div>
 
     <script>
         (function() {
@@ -188,10 +197,12 @@
         })();
         jQuery(document).ready(function() {
 
-            $('#tahun_id').select2({
+            $('#tmunit_id').select2({
                 placeholder: "Pilih data tahun"
             });
-
+            $('#tahun_id').select2({
+                    placeholder: "Pilih data tahun"
+                });
             $('#formdata').on('submit', function() {
                 event.preventDefault();
                 Swal.fire({
@@ -407,16 +418,12 @@
                         .target);
                     $(`#polaritas_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).attr('disabled', true).val(data
                         .nama_polaritas);
-                    $(`#sub_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).val(0);
-                    $(`#kpi_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).val(0);
-                    $(`#total_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).val(0);
-
                     if (data.tmkamus_sub_id == 0 || data.tmkamus_sub_id == null) {
-                        
-                    // $(`#tr_subchild_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).remove(); 
-
-
+                     // $(`#tr_subchild_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).remove(); 
+                      $(`#sub_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).css("display", "none").attr('disabled', true).val(0);
                     } else { 
+                      $(`#sub_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).css("display", "none").attr('disabled', true).val(0);
+
                         $.ajax({
                             url: "{{ route('kamus.kamus_request_ajax_sub') }}",
                             method: "GET",
@@ -438,8 +445,7 @@
                                        
                                         &nbsp;&nbsp;&nbsp;<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/UtR_arrow.svg/554px-UtR_arrow.svg.png?20071214083927" class="image-responsive" style="height:20px"> &nbsp;&nbsp;&nbsp;${index+1}. ${value.nama_kpi_sub} 
                                         
-                                       </td>
-
+                                       </td> 
                                             <td><input class="form-control" id="tmsatuanid_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="tmsatuan_id[]" value="${value.nama_satuan}" disabled/></td>
                                             <td><input class="form-control" id="target_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="target[]" value="${value.target}" disabled></td>
                                             <td><input class="form-control" id="polaritas_children${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}" name="polaritas[]" value="${value.nama_polaritas}" disabled/></td>
@@ -460,7 +466,9 @@
                             }
                         });
                         //end call function  
-                    }
+                    } 
+                     $(`#kpi_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).val(0);
+                     $(`#total_${urutan}_${tmprospektif_id}_${tmprospektif_sub_id}`).val(0);
                 },
                 error: function(data) {
                     toastr.error(
